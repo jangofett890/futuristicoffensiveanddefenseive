@@ -1,6 +1,7 @@
 package futuristicoffensiveanddefenseive.theneonfish.fod.API;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import net.minecraft.entity.Entity;
@@ -98,10 +99,14 @@ public class BaseExplosivePrimed extends Entity {
     }
     private void giveEffect(Potion name, double x, double y, double z, int duration, float radius){
     	List playerlist = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(x - radius, y - radius, z - radius, x + radius, y + radius,z + radius));	
-    	EntityPlayer[] player = playerlist.toArray();
-    	for (int i = 0; i <= playerlist.toArray().length; i++ ){
-    		player[i].addPotionEffect(new PotionEffect(name.id, duration, 1));
-    	}
+    	Iterator playerIterator = playerlist.iterator();
+    	EntityPlayer entityplayer;
+    	
+    	while (playerIterator.hasNext())
+        {
+            entityplayer = (EntityPlayer)playerIterator.next();
+            entityplayer.addPotionEffect(new PotionEffect(name.id, duration, 1));
+        }
     	
     }
     private void explode()
