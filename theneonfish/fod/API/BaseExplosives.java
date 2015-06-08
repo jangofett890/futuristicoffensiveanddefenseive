@@ -1,5 +1,7 @@
 package futuristicoffensiveanddefenseive.theneonfish.fod.API;
 
+import ibxm.Player;
+
 import java.util.Random;
 
 import net.minecraft.block.Block;
@@ -11,19 +13,23 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Items;
 import net.minecraft.potion.Potion;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
+import cpw.mods.fml.common.ModClassLoader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class BaseExplosives extends Block {
 	public int fuse;
-	public float force;
+	public static float force;
 	
 	public Potion effectName;
 	public boolean hasEffect;
-	protected BaseExplosives(Material arg0) {
+	public static boolean hasDetonator;
+	protected BaseExplosives() {
 		super(Material.tnt);
 	}
 	@SideOnly(Side.CLIENT)
@@ -104,6 +110,9 @@ public class BaseExplosives extends Block {
         {
             if ((p_150114_5_ & 1) == 1)
             {
+            	if (this.hasDetonator == true){
+                	return;
+                }
             	BaseExplosivePrimed entitytntprimed = new BaseExplosivePrimed(p_150114_1_, (double)((float)p_150114_2_ + 0.5F), (double)((float)p_150114_3_ + 0.5F), (double)((float)p_150114_4_ + 0.5F), p_150114_6_);
                 entitytntprimed.fuse = this.fuse;
                 entitytntprimed.force = this.force;
@@ -124,16 +133,21 @@ public class BaseExplosives extends Block {
     {
         if (p_149727_5_.getCurrentEquippedItem() != null && p_149727_5_.getCurrentEquippedItem().getItem() == Items.flint_and_steel)
         {
-            this.func_150114_a(p_149727_1_, p_149727_2_, p_149727_3_, p_149727_4_, 1, p_149727_5_);
-            p_149727_1_.setBlockToAir(p_149727_2_, p_149727_3_, p_149727_4_);
-            p_149727_5_.getCurrentEquippedItem().damageItem(1, p_149727_5_);
-            bomb.fuse =this.fuse;
-            bomb.force = this.force;
-            return true;
+        	if (this.hasDetonator){
+        		
+        		this.func_150114_a(p_149727_1_, p_149727_2_, p_149727_3_, p_149727_4_, 1, p_149727_5_);
+        		p_149727_1_.setBlockToAir(p_149727_2_, p_149727_3_, p_149727_4_);
+            	p_149727_5_.getCurrentEquippedItem().damageItem(1, p_149727_5_);
+            	bomb.fuse =this.fuse;
+            	bomb.force = this.force;
+            	return true;
+        	}
+        	return false;
         }
         else
         {
-            return super.onBlockActivated(p_149727_1_, p_149727_2_, p_149727_3_, p_149727_4_, p_149727_5_, p_149727_6_, p_149727_7_, p_149727_8_, p_149727_9_);
+        	
+        	return super.onBlockActivated(p_149727_1_, p_149727_2_, p_149727_3_, p_149727_4_, p_149727_5_, p_149727_6_, p_149727_7_, p_149727_8_, p_149727_9_);
         }
     }
 

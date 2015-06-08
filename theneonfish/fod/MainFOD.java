@@ -23,6 +23,7 @@ public class MainFOD
     public static final String VERSION = "0.01";
     
     public static Item testItem;
+    public static Item detonator;
     public static Block testBlock;
     public static Block Nuke;
     public static CreativeTabs tabList = new CreativeTabs("FuturisticOffensiveandDefensive"){
@@ -36,10 +37,12 @@ public class MainFOD
     public void init(FMLInitializationEvent event)
     {
 		this.testItem = new TestItem().setCreativeTab(tabList).setUnlocalizedName("TestItem");
+		this.detonator = new TestItem().setCreativeTab(tabList).setUnlocalizedName("Detonator");
 		this.testBlock = new TestBlock(Material.tnt).setCreativeTab(tabList).setBlockName("TestBlock").setBlockTextureName("tnt");
 		this.Nuke = new Nuke(Material.tnt).setCreativeTab(tabList).setBlockName("Nuke").setBlockTextureName("tnt");
 		GameRegistry.registerBlock(Nuke, "Nuke");
 		GameRegistry.registerItem(testItem, "TestItem");
+		GameRegistry.registerItem(detonator, "Detonator");
 		GameRegistry.registerBlock(testBlock, "TestBlock");
     }
 }

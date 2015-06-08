@@ -12,7 +12,6 @@ public class TestItem extends ElectricItemBase {
 	}
 	@Override
 	public double getEnergyCapacity(ItemStack itemStack) {
-		// TODO Auto-generated method stub
 		return 1000;
 	}
 }

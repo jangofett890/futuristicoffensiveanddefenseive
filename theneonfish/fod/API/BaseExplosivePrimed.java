@@ -20,6 +20,7 @@ public class BaseExplosivePrimed extends Entity {
 	public int fuse;
 	public float force;
 	public boolean hasEffect;
+	public boolean hasDetonator;
 	public static Potion effectName;
 	
 	public BaseExplosivePrimed(World p_i1729_1_) {
@@ -89,7 +90,8 @@ public class BaseExplosivePrimed extends Entity {
 
             if (!this.worldObj.isRemote)
             {
-                this.explode();
+                
+            	this.explode();
             }
         }
         else

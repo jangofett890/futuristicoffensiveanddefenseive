@@ -1,5 +1,6 @@
 package futuristicoffensiveanddefenseive.theneonfish.fod.blocks;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.potion.Potion;
 import futuristicoffensiveanddefenseive.theneonfish.fod.MainFOD;
@@ -10,9 +11,10 @@ public class Nuke extends BaseExplosives {
 	public Nuke(Material arg0) {
 		super(arg0);
 		this.fuse = 20;
-		this.force = 50;
+		this.force = 500;
 		this.effectName = Potion.wither;
 		this.hasEffect = true;
+		this.hasDetonator = true;
 	}
 	
 }
