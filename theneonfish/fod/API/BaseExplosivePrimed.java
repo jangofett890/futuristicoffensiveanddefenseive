@@ -97,10 +97,12 @@ public class BaseExplosivePrimed extends Entity {
         }
     }
     private void giveEffect(Potion name, double x, double y, double z, int duration, float radius){
-    	List player = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(x - radius, y - radius, z - radius, x + radius, y + radius,z + radius));	
-    	ArrayList array = player.toArray();
+    	List playerlist = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(x - radius, y - radius, z - radius, x + radius, y + radius,z + radius));	
+    	EntityPlayer[] player = playerlist.toArray();
+    	for (int i = 0; i <= playerlist.toArray().length; i++ ){
+    		player[i].addPotionEffect(new PotionEffect(name.id, duration, 1));
+    	}
     	
-    	player.addPotionEffect(new PotionEffect(name.id, duration, 1));
     }
     private void explode()
     {
