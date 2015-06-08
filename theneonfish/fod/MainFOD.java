@@ -2,17 +2,19 @@ package futuristicoffensiveanddefenseive.theneonfish.fod;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.util.IIcon;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import futuristicoffensiveanddefenseive.theneonfish.fod.items.TestBlock;
-import futuristicoffensiveanddefenseive.theneonfish.fod.items.TestItem;
+import futuristicoffensiveanddefenseive.theneonfish.fod.blocks.*;
+import futuristicoffensiveanddefenseive.theneonfish.fod.items.*;
 
 @Mod(modid = MainFOD.MODID, version = MainFOD.VERSION)
 public class MainFOD
@@ -22,6 +24,7 @@ public class MainFOD
     
     public static Item testItem;
     public static Block testBlock;
+    public static Block Nuke;
     public static CreativeTabs tabList = new CreativeTabs("FuturisticOffensiveandDefensive"){
     	@Override
     	@SideOnly(Side.CLIENT)
@@ -33,9 +36,10 @@ public class MainFOD
     public void init(FMLInitializationEvent event)
     {
 		this.testItem = new TestItem().setCreativeTab(tabList).setUnlocalizedName("TestItem");
-		this.testBlock = new TestBlock(Material.tnt).setCreativeTab(tabList).setBlockName("TestBlock");
+		this.testBlock = new TestBlock(Material.tnt).setCreativeTab(tabList).setBlockName("TestBlock").setBlockTextureName("tnt");
+		this.Nuke = new Nuke(Material.tnt).setCreativeTab(tabList).setBlockName("Nuke").setBlockTextureName("tnt");
+		GameRegistry.registerBlock(Nuke, "Nuke");
 		GameRegistry.registerItem(testItem, "TestItem");
 		GameRegistry.registerBlock(testBlock, "TestBlock");
     }
-
 }

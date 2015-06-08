@@ -2,28 +2,27 @@ package futuristicoffensiveanddefenseive.theneonfish.fod.API;
 
 import java.util.Random;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockTNT;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityTNTPrimed;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
+import net.minecraft.potion.Potion;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class BaseExplosives extends Block {
 	public int fuse;
 	public float force;
 	
+	public Potion effectName;
+	public boolean hasEffect;
 	protected BaseExplosives(Material arg0) {
 		super(Material.tnt);
 	}
@@ -95,11 +94,10 @@ public class BaseExplosives extends Block {
     /**
      * Called right before the block is destroyed by a player.  Args: world, x, y, z, metaData
      */
-    public void onBlockDestroyedByPlayer(World p_149664_1_, int p_149664_2_, int p_149664_3_, int p_149664_4_)
+    public void onBlockDestroyedByPlayer(World p_149664_1_, int p_149664_2_, int p_149664_3_, int p_149664_4_, int p_149664_5_)
     {
-        this.func_150114_a(p_149664_1_, p_149664_2_, p_149664_3_, p_149664_4_, (int) force, (EntityLivingBase)null);
+        this.func_150114_a(p_149664_1_, p_149664_2_, p_149664_3_, p_149664_4_, p_149664_5_, (EntityLivingBase)null);
     }
-
     public void func_150114_a(World p_150114_1_, int p_150114_2_, int p_150114_3_, int p_150114_4_, int p_150114_5_, EntityLivingBase p_150114_6_)
     {
         if (!p_150114_1_.isRemote)
@@ -109,7 +107,11 @@ public class BaseExplosives extends Block {
             	BaseExplosivePrimed entitytntprimed = new BaseExplosivePrimed(p_150114_1_, (double)((float)p_150114_2_ + 0.5F), (double)((float)p_150114_3_ + 0.5F), (double)((float)p_150114_4_ + 0.5F), p_150114_6_);
                 entitytntprimed.fuse = this.fuse;
                 entitytntprimed.force = this.force;
-            	p_150114_1_.spawnEntityInWorld(entitytntprimed);
+                entitytntprimed.hasEffect = this.hasEffect;
+                if (this.effectName != null){
+                	BaseExplosivePrimed.effectName = this.effectName;
+                }
+                p_150114_1_.spawnEntityInWorld(entitytntprimed);
                 p_150114_1_.playSoundAtEntity(entitytntprimed, "game.tnt.primed", 1.0F, 1.0F);
             }
         }

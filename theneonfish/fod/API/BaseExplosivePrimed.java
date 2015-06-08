@@ -1,8 +1,15 @@
 package futuristicoffensiveanddefenseive.theneonfish.fod.API;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -11,6 +18,8 @@ public class BaseExplosivePrimed extends Entity {
 	private EntityLivingBase tntPlacedBy;
 	public int fuse;
 	public float force;
+	public boolean hasEffect;
+	public static Potion effectName;
 	
 	public BaseExplosivePrimed(World p_i1729_1_) {
 		super(p_i1729_1_);
@@ -28,7 +37,6 @@ public class BaseExplosivePrimed extends Entity {
         this.motionX = (double)(-((float)Math.sin((double)f)) * 0.02F);
         this.motionY = 0.20000000298023224D;
         this.motionZ = (double)(-((float)Math.cos((double)f)) * 0.02F);
-        this.fuse = 80;
         this.prevPosX = p_i1730_2_;
         this.prevPosY = p_i1730_4_;
         this.prevPosZ = p_i1730_6_;
@@ -88,9 +96,17 @@ public class BaseExplosivePrimed extends Entity {
             this.worldObj.spawnParticle("smoke", this.posX, this.posY + 0.5D, this.posZ, 0.0D, 0.0D, 0.0D);
         }
     }
-
+    private void giveEffect(Potion name, double x, double y, double z, int duration, float radius){
+    	List player = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(x - radius, y - radius, z - radius, x + radius, y + radius,z + radius));	
+    	ArrayList array = player.toArray();
+    	
+    	player.addPotionEffect(new PotionEffect(name.id, duration, 1));
+    }
     private void explode()
     {
+    	if(hasEffect == true){
+    		giveEffect(this.effectName, this.posX, this.posY, this.posZ, 1000, force);
+    	}
         this.worldObj.createExplosion(this, this.posX, this.posY, this.posZ, force, true);
     }
 
