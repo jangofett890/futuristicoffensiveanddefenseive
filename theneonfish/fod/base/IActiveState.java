@@ -1,4 +1,4 @@
-package futuristicoffensiveanddefenseive.theneonfish.fod;
+package futuristicoffensiveanddefenseive.theneonfish.fod.base;
 
 public interface IActiveState
 {

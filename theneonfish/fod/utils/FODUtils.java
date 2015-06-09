@@ -1,6 +1,7 @@
 package futuristicoffensiveanddefenseive.theneonfish.fod.utils;
 
-import futuristicoffensiveanddefenseive.theneonfish.fod.IActiveState;
+import futuristicoffensiveanddefenseive.theneonfish.fod.MainFOD;
+import futuristicoffensiveanddefenseive.theneonfish.fod.base.IActiveState;
 import futuristicoffensiveanddefenseive.theneonfish.fod.intergration.FODHooks;
 import ic2.api.energy.EnergyNet;
 
@@ -266,6 +267,12 @@ public final class FODUtils
 
 		return 0;
 	}
+	
+	public static boolean useIC2()
+	{
+		return FODHooks.IC2Loaded && EnergyNet.instance != null && !general.blacklistIC2;
+	}
+	
 
 	/**
 	 * Whether or not a block is a dead fluid.

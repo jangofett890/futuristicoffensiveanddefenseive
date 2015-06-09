@@ -1,5 +1,7 @@
 package futuristicoffensiveanddefenseive.theneonfish.fod.API;
 
+import ic2.api.event.ExplosionEvent;
+
 import java.util.HashSet;
 import java.util.List;
 
@@ -15,6 +17,7 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 
 public class CustomExplosion extends Explosion {
 	public int radius;
@@ -33,7 +36,7 @@ public class CustomExplosion extends Explosion {
     }
     public void explode()
     {
-        ExplosionConstructionEvent evt = new ExplosionConstructionEvent(this.world(), this);
+        ExplosionEvent evt = new ExplosionEvent(this.world(), this);
         MinecraftForge.EVENT_BUS.post(evt);
 
         if (!evt.isCanceled())

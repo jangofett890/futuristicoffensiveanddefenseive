@@ -1,6 +1,6 @@
-package futuristicoffensiveanddefenseive.theneonfish.fod.entities;
+package futuristicoffensiveanddefenseive.theneonfish.fod.tile;
 
-import futuristicoffensiveanddefenseive.theneonfish.fod.ISustainedInventory;
+import futuristicoffensiveanddefenseive.theneonfish.fod.base.ISustainedInventory;
 import futuristicoffensiveanddefenseive.theneonfish.fod.utils.FODUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;

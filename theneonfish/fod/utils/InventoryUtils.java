@@ -2,11 +2,11 @@ package futuristicoffensiveanddefenseive.theneonfish.fod.utils;
 
 import mekanism.api.EnumColor;
 import mekanism.api.util.StackUtils;
-import futuristicoffensiveanddefenseive.theneonfish.fod.ISideConfiguration;
-import mekanism.common.content.transporter.Finder;
-import mekanism.common.content.transporter.InvStack;
-import mekanism.common.tile.TileEntityBin;
-import mekanism.common.tile.TileEntityLogisticalSorter;
+import futuristicoffensiveanddefenseive.theneonfish.fod.base.ISideConfiguration;
+import futuristicoffensiveanddefenseive.theneonfish.fod.transporter.Finder;
+import futuristicoffensiveanddefenseive.theneonfish.fod.transporter.InvStack;
+import futuristicoffensiveanddefenseive.theneonfish.fod.tile.TileEntityBin;
+import futuristicoffensiveanddefenseive.theneonfish.fod.tile.TileEntityLogisticalSorter;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;

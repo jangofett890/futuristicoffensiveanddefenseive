@@ -20,7 +20,7 @@ import futuristicoffensiveanddefenseive.theneonfish.fod.energy.item.ElectricItem
 import futuristicoffensiveanddefenseive.theneonfish.fod.items.*;
 import futuristicoffensiveanddefenseive.theneonfish.fod.packet.PacketHandler;
 
-@Mod(modid = MainFOD.MODID, version = MainFOD.VERSION, name = "Futuristic Offensive and Deffensive", dependencies = "after:Mekanism" )
+@Mod(modid = MainFOD.MODID, version = MainFOD.VERSION, name = "Futuristic Offensive and Deffensive", dependencies = "required-after:Mekanism" )
 public class MainFOD
 {
     public static final String MODID = "FuturisticOffensiveandDefensive";
@@ -31,12 +31,6 @@ public class MainFOD
 	@SidedProxy(clientSide = "futuristicoffensiveanddefenseive.theneonfish.fod.client.ClientProxy", serverSide = "futuristicoffensiveanddefenseive.theneonfish.fod.common.CommonProxy")
 	public static CommonProxy proxy;
     
-    public static Item testItem;
-    public static Item detonator;
-    public static Block testBlock;
-    public static Block Nuke;
-    
-    public static ElectricItemBase basicBattery;
     public static CreativeTabs tabList = new CreativeTabs("FuturisticOffensiveandDefensive"){
     	@Override
     	@SideOnly(Side.CLIENT)
@@ -45,15 +39,14 @@ public class MainFOD
     	}
     };
     @EventHandler
+    public void preInit(FMLInitializationEvent event){
+    	FODBlocks.register();
+    	FODItems.register();
+    }
+    
+    
+    @EventHandler
     public void init(FMLInitializationEvent event)
     {
-		this.basicBattery = (ElectricItemBase)new ElectricItemBase(10000).setUnlocalizedName("Battery");
-		this.testBlock = new TestBlock(Material.tnt).setCreativeTab(tabList).setBlockName("TestBlock").setBlockTextureName("tnt");
-		this.Nuke = new Nuke(Material.tnt).setCreativeTab(tabList).setBlockName("Nuke").setBlockTextureName("tnt");
-		GameRegistry.registerBlock(Nuke, "Nuke");
-		GameRegistry.registerItem(basicBattery, "basicBattery");
-		this.detonator = new basicItem().setCreativeTab(tabList).setUnlocalizedName("Detonator");
-		GameRegistry.registerItem(detonator, "Detonator");
-		GameRegistry.registerBlock(testBlock, "TestBlock");
     }
 }

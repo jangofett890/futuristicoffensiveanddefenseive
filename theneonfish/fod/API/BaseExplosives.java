@@ -1,5 +1,6 @@
 package futuristicoffensiveanddefenseive.theneonfish.fod.API;
 
+import futuristicoffensiveanddefenseive.theneonfish.fod.FODItems;
 import futuristicoffensiveanddefenseive.theneonfish.fod.MainFOD;
 import ibxm.Player;
 
@@ -23,16 +24,42 @@ import cpw.mods.fml.common.ModClassLoader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BaseExplosives extends Block {
+public class BaseExplosives extends BasicBlock {
 	public int fuse;
 	public static float force;
+	
+	 private String unlocalizedName;
 	
 	public Potion effectName;
 	public boolean hasEffect;
 	public boolean hasDetonator;
-	protected BaseExplosives(Material arg0) {
-		super(Material.tnt);
+	
+	
+	public BaseExplosives(Material matt, int fuse, float force) {
+		super(matt);
+		this.fuse = fuse;
+		this.force = force;
 	}
+	
+	
+	public BaseExplosives setEffect(Potion effectName){
+		this.hasEffect = true;
+		this.effectName = effectName;
+		return this;
+	}
+	
+	public BaseExplosives hasDetonator(boolean hasDetonator){
+		this.hasDetonator = hasDetonator;
+		return this;
+	}
+	
+	
+    public BaseExplosives setBlockName(String name)
+    {
+        this.unlocalizedName = name;
+        return this;
+    }
+	
 	@SideOnly(Side.CLIENT)
     private IIcon field_150116_a;
     @SideOnly(Side.CLIENT)
@@ -131,7 +158,7 @@ public class BaseExplosives extends Block {
     {
     	if(this.hasDetonator == true){
 
-        if (player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().getItem() == MainFOD.detonator)
+        if (player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().getItem() == FODItems.detonator)
         {
         		this.createExplosivePrimed(world, x, y, z, 1, player);
         		world.setBlockToAir(x, y, z);

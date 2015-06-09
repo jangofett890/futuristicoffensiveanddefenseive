@@ -1,4 +1,4 @@
-package futuristicoffensiveanddefenseive.theneonfish.fod.entities;
+package futuristicoffensiveanddefenseive.theneonfish.fod.tile;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -17,13 +17,13 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import cpw.mods.fml.common.Optional.Interface;
 import cpw.mods.fml.common.Optional.Method;
+import futuristicoffensiveanddefenseive.theneonfish.fod.base.IChunkLoadHandler;
+import futuristicoffensiveanddefenseive.theneonfish.fod.base.ITileComponent;
+import futuristicoffensiveanddefenseive.theneonfish.fod.base.ITileNetwork;
 import futuristicoffensiveanddefenseive.theneonfish.fod.network.PacketTileEntity.TileEntityMessage;
 
 
 import futuristicoffensiveanddefenseive.theneonfish.fod.utils.FODUtils;
-import futuristicoffensiveanddefenseive.theneonfish.fod.IChunkLoadHandler;
-import futuristicoffensiveanddefenseive.theneonfish.fod.ITileComponent;
-import futuristicoffensiveanddefenseive.theneonfish.fod.ITileNetwork;
 import futuristicoffensiveanddefenseive.theneonfish.fod.MainFOD;
 import futuristicoffensiveanddefenseive.theneonfish.fod.network.PacketDataRequest.DataRequestMessage;
 
