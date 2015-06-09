@@ -11,7 +11,7 @@ import futuristicoffensiveanddefenseive.theneonfish.fod.API.BaseExplosives;
 public class TestBlock extends BaseExplosives {
 
 	public TestBlock(Material arg0) {
-		super(arg0.tnt);
+		super();
 		this.fuse = 100;
 		this.force = 30;
 	}
