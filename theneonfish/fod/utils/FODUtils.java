@@ -1,5 +1,6 @@
 package futuristicoffensiveanddefenseive.theneonfish.fod.utils;
 
+import futuristicoffensiveanddefenseive.theneonfish.fod.IActiveState;
 import futuristicoffensiveanddefenseive.theneonfish.fod.intergration.FODHooks;
 import ic2.api.energy.EnergyNet;
 
@@ -43,6 +44,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.IBlockAccess;
@@ -96,11 +98,13 @@ public final class FODUtils
 		return false;
 	}
 
-	/**
-	 * Notifies neighboring blocks of a TileEntity change without loading chunks.
-	 * @param world - world to perform the operation in
-	 * @param coord - Coord4D to perform the operation on
-	 */
+	public static String localize(String s)
+	{
+		return StatCollector.translateToLocal(s);
+	}
+	
+	
+	
 	public static void notifyLoadedNeighborsOfTileChange(World world, Coord4D coord)
 	{
 		for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
@@ -130,6 +134,18 @@ public final class FODUtils
 		}
 	}
 
+	public static void updateBlock(World world, int x, int y, int z)
+	{
+		if(!(world.getTileEntity(x, y, z) instanceof IActiveState) || ((IActiveState)world.getTileEntity(x, y, z)).renderUpdate())
+		{
+			world.func_147479_m(x, y, z);
+		}
+
+		if(!(world.getTileEntity(x, y, z) instanceof IActiveState) || ((IActiveState)world.getTileEntity(x, y, z)).lightUpdate() && client.machineEffects)
+		{
+			updateAllLightTypes(world, x, y, z);
+		}
+	}
 
 
 
