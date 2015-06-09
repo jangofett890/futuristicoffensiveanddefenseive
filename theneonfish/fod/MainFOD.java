@@ -24,6 +24,7 @@ public class MainFOD
     public static final String VERSION = "0.01";
     
     public static Item testItem;
+    public static Item detonator;
     public static Block testBlock;
     public static Block Nuke;
     
@@ -43,6 +44,8 @@ public class MainFOD
 		this.Nuke = new Nuke(Material.tnt).setCreativeTab(tabList).setBlockName("Nuke").setBlockTextureName("tnt");
 		GameRegistry.registerBlock(Nuke, "Nuke");
 		GameRegistry.registerItem(basicBattery, "basicBattery");
+		this.detonator = new TestItem().setCreativeTab(tabList).setUnlocalizedName("Detonator");
+		GameRegistry.registerItem(detonator, "Detonator");
 		GameRegistry.registerBlock(testBlock, "TestBlock");
     }
 }
