@@ -14,6 +14,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import futuristicoffensiveanddefenseive.theneonfish.fod.blocks.*;
+import futuristicoffensiveanddefenseive.theneonfish.fod.energy.item.ElectricItemBase;
 import futuristicoffensiveanddefenseive.theneonfish.fod.items.*;
 
 @Mod(modid = MainFOD.MODID, version = MainFOD.VERSION)
@@ -25,6 +26,8 @@ public class MainFOD
     public static Item testItem;
     public static Block testBlock;
     public static Block Nuke;
+    
+    public static ElectricItemBase basicBattery;
     public static CreativeTabs tabList = new CreativeTabs("FuturisticOffensiveandDefensive"){
     	@Override
     	@SideOnly(Side.CLIENT)
@@ -35,11 +38,11 @@ public class MainFOD
     @EventHandler
     public void init(FMLInitializationEvent event)
     {
-		this.testItem = new TestItem().setCreativeTab(tabList).setUnlocalizedName("TestItem");
+		this.basicBattery = (ElectricItemBase)new ElectricItemBase(10000).setUnlocalizedName("Battery");
 		this.testBlock = new TestBlock(Material.tnt).setCreativeTab(tabList).setBlockName("TestBlock").setBlockTextureName("tnt");
 		this.Nuke = new Nuke(Material.tnt).setCreativeTab(tabList).setBlockName("Nuke").setBlockTextureName("tnt");
 		GameRegistry.registerBlock(Nuke, "Nuke");
-		GameRegistry.registerItem(testItem, "TestItem");
+		GameRegistry.registerItem(basicBattery, "basicBattery");
 		GameRegistry.registerBlock(testBlock, "TestBlock");
     }
 }

@@ -2,173 +2,222 @@ package futuristicoffensiveanddefenseive.theneonfish.fod.energy.item;
 
 import java.util.List;
 
+
+
+
+
+import mekanism.api.EnumColor;
+import mekanism.api.MekanismConfig.general;
+import mekanism.api.energy.*;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagDouble;
-import net.minecraft.nbt.NBTTagFloat;
-import net.minecraft.world.World;
-import resonantengine.api.item.IEnergyItem;
+import cpw.mods.fml.common.Optional.Interface;
+import cpw.mods.fml.common.Optional.InterfaceList;
+import cpw.mods.fml.common.Optional.Method;
+import cofh.api.energy.IEnergyContainerItem;
+import futuristicoffensiveanddefenseive.theneonfish.fod.MainFOD;
+import futuristicoffensiveanddefenseive.theneonfish.fod.intergration.IC2ItemManager;
+import futuristicoffensiveanddefenseive.theneonfish.fod.items.basicItem;
+import futuristicoffensiveanddefenseive.theneonfish.fod.utils.FODUtils;
+import futuristicoffensiveanddefenseive.theneonfish.fod.utils.LangUtils;
+import ic2.api.item.IElectricItemManager;
+import ic2.api.item.ISpecialElectricItem;
 
-public abstract class ElectricItemBase extends Item implements IEnergyItem {
-    public float transferMax;
 
-    public ElectricItemBase()
-    {
-        super();
-        this.setMaxStackSize(1);
-        this.setMaxDamage(100);
-        this.setNoRepair();
-        this.setMaxTransfer();
-    }
+public class ElectricItemBase extends basicItem implements IEnergizedItem , IEnergyContainerItem, ISpecialElectricItem{
+	public static double Energy;
+	public double MAX_ELECTRICITY;
 
-    protected void setMaxTransfer()
-    {
-        this.transferMax = 200;
-    }
+	public ElectricItemBase(double maxElectricity)
+	{
+		super();
+		MAX_ELECTRICITY = maxElectricity;
+		setMaxStackSize(1);
+		setMaxDamage(100);
+		setNoRepair();
+		setCreativeTab(MainFOD.tabList);
+	}
+	
+	@Override
+	public void addInformation(ItemStack itemstack, EntityPlayer entityplayer, List list, boolean flag)
+	{
+		list.add(EnumColor.AQUA + LangUtils.localize("tooltip.storedEnergy") + ": " + EnumColor.GREY + FODUtils.getEnergyDisplay(getEnergy(itemstack)));
+	}
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    @Override
-    public void addInformation(ItemStack itemStack, EntityPlayer entityPlayer, List list, boolean par4)
-    {
-        String color = "";
-        double energy = this.getEnergy(itemStack);
+	public ItemStack getUnchargedItem()
+	{
+		ItemStack stack = new ItemStack(this);
+		stack.setItemDamage(100);
+		return stack;
+	}
 
-        if (energy <= this.getEnergyCapacity(itemStack) / 3)
-        {
-            color = "\u00a74";
-        }
-        else if (energy > this.getEnergyCapacity(itemStack) * 2 / 3)
-        {
-            color = "\u00a72";
-        }
-        else
-        {
-            color = "\u00a76";
-        }
-    }
+	@Override
+	public void getSubItems(Item item, CreativeTabs tabs, List list)
+	{
+		ItemStack discharged = new ItemStack(this);
+		discharged.setItemDamage(100);
+		list.add(discharged);
+		ItemStack charged = new ItemStack(this);
+		setEnergy(charged, ((IEnergizedItem)charged.getItem()).getMaxEnergy(charged));
+		list.add(charged);
+	}
 
-    /**
-     * Makes sure the item is uncharged when it is crafted and not charged.
-     * Change this if you do not want this to happen!
-     */
-    @Override
-    public void onCreated(ItemStack itemStack, World par2World, EntityPlayer par3EntityPlayer)
-    {
-        this.setEnergy(itemStack, 0);
-    }
+	@Override
+	@Method(modid = "IC2")
+	public boolean canProvideEnergy(ItemStack itemStack)
+	{
+		return canSend(itemStack);
+	}
 
-    @Override
-    public double recharge(ItemStack itemStack, double energy, boolean doRecharge)
-    {
-        double rejectedEnergy = Math.max(this.getEnergy(itemStack) + energy - this.getEnergyCapacity(itemStack), 0);
-        double energyToReceive = energy - rejectedEnergy;
-        if (energyToReceive > this.transferMax)
-        {
-            rejectedEnergy += energyToReceive - this.transferMax;
-            energyToReceive = this.transferMax;
-        }
+	@Override
+	@Method(modid = "IC2")
+	public Item getChargedItem(ItemStack itemStack)
+	{
+		return this;
+	}
 
-        if (doRecharge)
-        {
-            this.setEnergy(itemStack, this.getEnergy(itemStack) + energyToReceive);
-        }
+	@Override
+	@Method(modid = "IC2")
+	public Item getEmptyItem(ItemStack itemStack)
+	{
+		return this;
+	}
 
-        return energyToReceive;
-    }
+	@Override
+	@Method(modid = "IC2")
+	public double getMaxCharge(ItemStack itemStack)
+	{
+		return 0;
+	}
 
-    @Override
-    public double discharge(ItemStack itemStack, double energy, boolean doDischarge)
-    {
-        double energyToTransfer = Math.min(Math.min(this.getEnergy(itemStack), energy), this.transferMax);
+	@Override
+	@Method(modid = "IC2")
+	public int getTier(ItemStack itemStack)
+	{
+		return 4;
+	}
 
-        if (doDischarge)
-        {
-            this.setEnergy(itemStack, this.getEnergy(itemStack) - energyToTransfer);
-        }
+	@Override
+	@Method(modid = "IC2")
+	public double getTransferLimit(ItemStack itemStack)
+	{
+		return 0;
+	}
 
-        return energyToTransfer;
-    }
+	@Override
+	public double getEnergy(ItemStack itemStack)
+	{
+		if(itemStack.stackTagCompound == null)
+		{
+			return 0;
+		}
 
-    @Override
-    public ItemStack setEnergy(ItemStack itemStack, double energy)
-    {
-        // Saves the frequency in the ItemStack
-        if (itemStack.getTagCompound() == null)
-        {
-            itemStack.setTagCompound(new NBTTagCompound());
-        }
+		double electricityStored = itemStack.stackTagCompound.getDouble("electricity");
+		itemStack.setItemDamage((int)Math.max(1, (Math.abs(((electricityStored/getMaxEnergy(itemStack))*100)-100))));
 
-        double electricityStored = Math.max(Math.min(energy, this.getEnergyCapacity(itemStack)), 0);
-        itemStack.getTagCompound().setDouble("electricity", electricityStored);
+		return electricityStored;
+	}
 
-        /** Sets the damage as a percentage to render the bar properly. */
-        itemStack.setItemDamage((int) (100 - electricityStored / this.getEnergyCapacity(itemStack) * 100));
-		return itemStack;
-    }
+	@Override
+	public void setEnergy(ItemStack itemStack, double amount)
+	{
+		if(itemStack.stackTagCompound == null)
+		{
+			itemStack.setTagCompound(new NBTTagCompound());
+		}
 
-    /**
-     * Gets the energy stored in the item. Energy is stored using item NBT
-     */
-    @Override
-    public double getEnergy(ItemStack itemStack)
-    {
-        if (itemStack.getTagCompound() == null)
-        {
-            itemStack.setTagCompound(new NBTTagCompound());
-        }
-        float energyStored = 0f;
-        if (itemStack.getTagCompound().hasKey("electricity"))
-        {
-            NBTBase obj = itemStack.getTagCompound().getTag("electricity");
-            if (obj instanceof NBTTagDouble)
-            {
-                energyStored = ((NBTTagDouble) obj).func_150288_h();
-            }
-            else if (obj instanceof NBTTagFloat)
-            {
-                energyStored = ((NBTTagFloat) obj).func_150288_h();
-            }
-        }
+		double electricityStored = Math.max(Math.min(amount, getMaxEnergy(itemStack)), 0);
+		itemStack.stackTagCompound.setDouble("electricity", electricityStored);
+		itemStack.setItemDamage((int)Math.max(1, (Math.abs(((electricityStored/getMaxEnergy(itemStack))*100)-100))));
+	}
 
-        /** Sets the damage as a percentage to render the bar properly. */
-        itemStack.setItemDamage((int) (100 - energyStored / this.getEnergyCapacity(itemStack) * 100));
-        return energyStored;
-    }
+	@Override
+	public double getMaxEnergy(ItemStack itemStack)
+	{
+		return MAX_ELECTRICITY;
+	}
 
-    public static boolean isElectricItem(Item item)
-    {
-        if (item instanceof ElectricItemBase)
-        {
-            return true;
-        }
+	@Override
+	public double getMaxTransfer(ItemStack itemStack)
+	{
+		return getMaxEnergy(itemStack)*0.005;
+	}
 
-        return false;
-    }
+	@Override
+	public boolean canReceive(ItemStack itemStack)
+	{
+		return getMaxEnergy(itemStack)-getEnergy(itemStack) > 0;
+	}
 
-    public static boolean isElectricItemEmpty(ItemStack itemstack)
-    {
-        if (itemstack == null) return false;        
-    	Item item = itemstack.getItem();
-    	
-    	if (item instanceof ElectricItemBase)
-        {
-            return ((ElectricItemBase) item).getEnergy(itemstack) <= 0;
-        }
+	@Override
+	public boolean canSend(ItemStack itemStack)
+	{
+		return getEnergy(itemStack) > 0;
+	}
 
-        return false;
-    }
+	@Override
+	public int receiveEnergy(ItemStack theItem, int energy, boolean simulate)
+	{
+		if(canReceive(theItem))
+		{
+			double energyNeeded = getMaxEnergy(theItem)-getEnergy(theItem);
+			double toReceive = Math.min(energy* general.FROM_TE, energyNeeded);
 
-    public boolean canSend(ItemStack itemStack)
-    {
-        return true;
-    }
+			if(!simulate)
+			{
+				setEnergy(theItem, getEnergy(theItem) + toReceive);
+			}
 
-    public boolean isMetadataSpecific(ItemStack itemStack)
-    {
-        return false;
-    }
-    }
+			return (int)Math.round(toReceive* general.TO_TE);
+		}
+
+		return 0;
+	}
+
+	@Override
+	public int extractEnergy(ItemStack theItem, int energy, boolean simulate)
+	{
+		if(canSend(theItem))
+		{
+			double energyRemaining = getEnergy(theItem);
+			double toSend = Math.min((energy* general.FROM_TE), energyRemaining);
+
+			if(!simulate)
+			{
+				setEnergy(theItem, getEnergy(theItem) - toSend);
+			}
+
+			return (int)Math.round(toSend* general.TO_TE);
+		}
+
+		return 0;
+	}
+
+	@Override
+	public int getEnergyStored(ItemStack theItem)
+	{
+		return (int)Math.round(getEnergy(theItem)* general.TO_TE);
+	}
+
+	@Override
+	public int getMaxEnergyStored(ItemStack theItem)
+	{
+		return (int)Math.round(getMaxEnergy(theItem)* general.TO_TE);
+	}
+
+	@Override
+	public boolean isMetadataSpecific(ItemStack itemStack)
+	{
+		return false;
+	}
+
+	@Override
+	@Method(modid = "IC2")
+	public IElectricItemManager getManager(ItemStack itemStack)
+	{
+		return IC2ItemManager.getManager(this);
+	}
+}
