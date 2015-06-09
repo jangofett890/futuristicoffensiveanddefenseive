@@ -9,7 +9,7 @@ import futuristicoffensiveanddefenseive.theneonfish.fod.API.BaseExplosives;
 
 public class Nuke extends BaseExplosives {
 	public Nuke(Material arg0) {
-		super(arg0);
+		super(Material.tnt);
 		this.fuse = 20;
 		this.force = 500;
 		this.effectName = Potion.wither;

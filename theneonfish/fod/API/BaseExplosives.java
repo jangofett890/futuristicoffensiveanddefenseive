@@ -1,5 +1,6 @@
 package futuristicoffensiveanddefenseive.theneonfish.fod.API;
 
+import futuristicoffensiveanddefenseive.theneonfish.fod.MainFOD;
 import ibxm.Player;
 
 import java.util.Random;
@@ -28,8 +29,8 @@ public class BaseExplosives extends Block {
 	
 	public Potion effectName;
 	public boolean hasEffect;
-	public static boolean hasDetonator;
-	protected BaseExplosives() {
+	public boolean hasDetonator;
+	protected BaseExplosives(Material arg0) {
 		super(Material.tnt);
 	}
 	@SideOnly(Side.CLIENT)
@@ -54,7 +55,7 @@ public class BaseExplosives extends Block {
     {
         super.onBlockAdded(p_149726_1_, p_149726_2_, p_149726_3_, p_149726_4_);
 
-        if (p_149726_1_.isBlockIndirectlyGettingPowered(p_149726_2_, p_149726_3_, p_149726_4_))
+        if (p_149726_1_.isBlockIndirectlyGettingPowered(p_149726_2_, p_149726_3_, p_149726_4_ )&& this.hasDetonator == false)
         {
             this.onBlockDestroyedByPlayer(p_149726_1_, p_149726_2_, p_149726_3_, p_149726_4_, 1);
             p_149726_1_.setBlockToAir(p_149726_2_, p_149726_3_, p_149726_4_);
@@ -67,7 +68,7 @@ public class BaseExplosives extends Block {
      */
     public void onNeighborBlockChange(World p_149695_1_, int p_149695_2_, int p_149695_3_, int p_149695_4_, Block p_149695_5_)
     {
-        if (p_149695_1_.isBlockIndirectlyGettingPowered(p_149695_2_, p_149695_3_, p_149695_4_))
+        if (p_149695_1_.isBlockIndirectlyGettingPowered(p_149695_2_, p_149695_3_, p_149695_4_)&& this.hasDetonator == false)
         {
             this.onBlockDestroyedByPlayer(p_149695_1_, p_149695_2_, p_149695_3_, p_149695_4_, 1);
             
@@ -110,9 +111,7 @@ public class BaseExplosives extends Block {
         {
             if ((p_150114_5_ & 1) == 1)
             {
-            	if (this.hasDetonator == true){
-                	return;
-                }
+
             	BaseExplosivePrimed entitytntprimed = new BaseExplosivePrimed(p_150114_1_, (double)((float)p_150114_2_ + 0.5F), (double)((float)p_150114_3_ + 0.5F), (double)((float)p_150114_4_ + 0.5F), p_150114_6_);
                 entitytntprimed.fuse = this.fuse;
                 entitytntprimed.force = this.force;
@@ -129,25 +128,25 @@ public class BaseExplosives extends Block {
     /**
      * Called upon block activation (right click on the block.)
      */
-    public boolean onBlockActivated(World p_149727_1_, int p_149727_2_, int p_149727_3_, int p_149727_4_, EntityPlayer p_149727_5_, int p_149727_6_, float p_149727_7_, float p_149727_8_, float p_149727_9_, BaseExplosivePrimed bomb)
+    @Override
+    public boolean onBlockActivated(World p_149727_1_, int p_149727_2_, int p_149727_3_, int p_149727_4_, EntityPlayer p_149727_5_, int p_149727_6_, float p_149727_7_, float p_149727_8_, float p_149727_9_)
     {
-        if (p_149727_5_.getCurrentEquippedItem() != null && p_149727_5_.getCurrentEquippedItem().getItem() == Items.flint_and_steel)
+    	if(this.hasDetonator == true){
+
+        if (p_149727_5_.getCurrentEquippedItem() != null && p_149727_5_.getCurrentEquippedItem().getItem() == MainFOD.detonator)
         {
-        	if (this.hasDetonator){
         		
         		this.func_150114_a(p_149727_1_, p_149727_2_, p_149727_3_, p_149727_4_, 1, p_149727_5_);
         		p_149727_1_.setBlockToAir(p_149727_2_, p_149727_3_, p_149727_4_);
-            	p_149727_5_.getCurrentEquippedItem().damageItem(1, p_149727_5_);
-            	bomb.fuse =this.fuse;
-            	bomb.force = this.force;
             	return true;
-        	}
-        	return false;
         }
         else
         {
         	
         	return super.onBlockActivated(p_149727_1_, p_149727_2_, p_149727_3_, p_149727_4_, p_149727_5_, p_149727_6_, p_149727_7_, p_149727_8_, p_149727_9_);
+        }
+        }else {
+        	return false;
         }
     }
 

@@ -44,7 +44,7 @@ public class MainFOD
 		this.Nuke = new Nuke(Material.tnt).setCreativeTab(tabList).setBlockName("Nuke").setBlockTextureName("tnt");
 		GameRegistry.registerBlock(Nuke, "Nuke");
 		GameRegistry.registerItem(basicBattery, "basicBattery");
-		this.detonator = new TestItem().setCreativeTab(tabList).setUnlocalizedName("Detonator");
+		this.detonator = new basicItem().setCreativeTab(tabList).setUnlocalizedName("Detonator");
 		GameRegistry.registerItem(detonator, "Detonator");
 		GameRegistry.registerBlock(testBlock, "TestBlock");
     }
