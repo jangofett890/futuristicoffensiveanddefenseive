@@ -24,7 +24,7 @@ import cpw.mods.fml.common.ModClassLoader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BaseExplosives extends BasicBlock {
+public class BaseExplosives extends Block {
 	public int fuse;
 	public static float force;
 	

@@ -9,6 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.util.IIcon;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -16,7 +17,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import futuristicoffensiveanddefenseive.theneonfish.fod.blocks.*;
 import futuristicoffensiveanddefenseive.theneonfish.fod.common.CommonProxy;
-import futuristicoffensiveanddefenseive.theneonfish.fod.energy.item.ElectricItemBase;
 import futuristicoffensiveanddefenseive.theneonfish.fod.items.*;
 import futuristicoffensiveanddefenseive.theneonfish.fod.packet.PacketHandler;
 
@@ -30,6 +30,9 @@ public class MainFOD
     
 	@SidedProxy(clientSide = "futuristicoffensiveanddefenseive.theneonfish.fod.client.ClientProxy", serverSide = "futuristicoffensiveanddefenseive.theneonfish.fod.common.CommonProxy")
 	public static CommonProxy proxy;
+	
+	@Instance("FuturisticOffensiveandDefensive")
+    public static MainFOD instance;
     
     public static CreativeTabs tabList = new CreativeTabs("FuturisticOffensiveandDefensive"){
     	@Override
