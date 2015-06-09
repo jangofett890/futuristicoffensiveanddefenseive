@@ -54,7 +54,6 @@ public class BaseExplosives extends Block {
     public void onBlockAdded(World world, int x, int y, int z)
     {
         super.onBlockAdded(world, x, y, z);
-
         if (world.isBlockIndirectlyGettingPowered(x, y, z )&& this.hasDetonator == false)
         {
             this.onBlockDestroyedByPlayer(world, x, y, z, 1);
@@ -111,7 +110,6 @@ public class BaseExplosives extends Block {
         {
             if ((rand & 1) == 1)
             {
-
             	BaseExplosivePrimed entitytntprimed = new BaseExplosivePrimed(world, (double)((float)x + 0.5F), (double)((float)y + 0.5F), (double)((float)z + 0.5F), livingEntity);
                 entitytntprimed.fuse = this.fuse;
                 entitytntprimed.force = this.force;
@@ -135,14 +133,12 @@ public class BaseExplosives extends Block {
 
         if (player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().getItem() == MainFOD.detonator)
         {
-        		
         		this.createExplosivePrimed(world, x, y, z, 1, player);
         		world.setBlockToAir(x, y, z);
             	return true;
         }
         else
         {
-        	
         	return super.onBlockActivated(world, x, y, z, player, metaData, sideX, sideY, sideZ);
         }
         }else {
@@ -176,12 +172,12 @@ public class BaseExplosives extends Block {
     {
         return false;
     }
-
+    
     @SideOnly(Side.CLIENT)
-    public void registerBlockIcons(IIconRegister p_149651_1_)
+    public void registerBlockIcons(IIconRegister icon)
     {
-        this.blockIcon = p_149651_1_.registerIcon(this.getTextureName() + "_side");
-        this.field_150116_a = p_149651_1_.registerIcon(this.getTextureName() + "_top");
-        this.field_150115_b = p_149651_1_.registerIcon(this.getTextureName() + "_bottom");
+        this.blockIcon = icon.registerIcon(this.getTextureName() + "_side");
+        this.field_150116_a = icon.registerIcon(this.getTextureName() + "_top");
+        this.field_150115_b = icon.registerIcon(this.getTextureName() + "_bottom");
     }
 }
