@@ -31,18 +31,18 @@ public class BaseExplosivePrimed extends Entity {
 	}
     private static final String __OBFID = "CL_00001681";
 
-    public BaseExplosivePrimed(World p_i1730_1_, double p_i1730_2_, double p_i1730_4_, double p_i1730_6_, EntityLivingBase p_i1730_8_)
+    public BaseExplosivePrimed(World world, double x, double y, double z, EntityLivingBase entity)
     {
-        this(p_i1730_1_);
-        this.setPosition(p_i1730_2_, p_i1730_4_, p_i1730_6_);
+        this(world);
+        this.setPosition(x, y, z);
         float f = (float)(Math.random() * Math.PI * 2.0D);
         this.motionX = (double)(-((float)Math.sin((double)f)) * 0.02F);
         this.motionY = 0.20000000298023224D;
         this.motionZ = (double)(-((float)Math.cos((double)f)) * 0.02F);
-        this.prevPosX = p_i1730_2_;
-        this.prevPosY = p_i1730_4_;
-        this.prevPosZ = p_i1730_6_;
-        this.tntPlacedBy = p_i1730_8_;
+        this.prevPosX = x;
+        this.prevPosY = y;
+        this.prevPosZ = z;
+        this.tntPlacedBy = entity;
     }
     protected void entityInit() {}
 
@@ -66,6 +66,7 @@ public class BaseExplosivePrimed extends Entity {
     /**
      * Called to update the entity's position/logic.
      */
+    @Override
     public void onUpdate()
     {
         this.prevPosX = this.posX;
@@ -122,17 +123,19 @@ public class BaseExplosivePrimed extends Entity {
     /**
      * (abstract) Protected helper method to write subclass entity data to NBT.
      */
-    protected void writeEntityToNBT(NBTTagCompound p_70014_1_)
+    @Override
+    protected void writeEntityToNBT(NBTTagCompound nbtTag)
     {
-        p_70014_1_.setByte("Fuse", (byte)this.fuse);
+        nbtTag.setByte("Fuse", (byte)this.fuse);
     }
 
     /**
      * (abstract) Protected helper method to read subclass entity data from NBT.
      */
-    protected void readEntityFromNBT(NBTTagCompound p_70037_1_)
+    @Override
+    protected void readEntityFromNBT(NBTTagCompound nbtTag)
     {
-        this.fuse = p_70037_1_.getByte("Fuse");
+        this.fuse = nbtTag.getByte("Fuse");
     }
 
     @SideOnly(Side.CLIENT)

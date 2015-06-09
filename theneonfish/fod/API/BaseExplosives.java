@@ -51,14 +51,14 @@ public class BaseExplosives extends Block {
     /**
      * Called whenever the block is added into the world. Args: world, x, y, z
      */
-    public void onBlockAdded(World p_149726_1_, int p_149726_2_, int p_149726_3_, int p_149726_4_)
+    public void onBlockAdded(World world, int x, int y, int z)
     {
-        super.onBlockAdded(p_149726_1_, p_149726_2_, p_149726_3_, p_149726_4_);
+        super.onBlockAdded(world, x, y, z);
 
-        if (p_149726_1_.isBlockIndirectlyGettingPowered(p_149726_2_, p_149726_3_, p_149726_4_ )&& this.hasDetonator == false)
+        if (world.isBlockIndirectlyGettingPowered(x, y, z )&& this.hasDetonator == false)
         {
-            this.onBlockDestroyedByPlayer(p_149726_1_, p_149726_2_, p_149726_3_, p_149726_4_, 1);
-            p_149726_1_.setBlockToAir(p_149726_2_, p_149726_3_, p_149726_4_);
+            this.onBlockDestroyedByPlayer(world, x, y, z, 1);
+            world.setBlockToAir(x, y, z);
         }
     }
 
@@ -66,20 +66,20 @@ public class BaseExplosives extends Block {
      * Lets the block know when one of its neighbor changes. Doesn't know which neighbor changed (coordinates passed are
      * their own) Args: x, y, z, neighbor Block
      */
-    public void onNeighborBlockChange(World p_149695_1_, int p_149695_2_, int p_149695_3_, int p_149695_4_, Block p_149695_5_)
+    public void onNeighborBlockChange(World world, int x, int y, int z, Block block)
     {
-        if (p_149695_1_.isBlockIndirectlyGettingPowered(p_149695_2_, p_149695_3_, p_149695_4_)&& this.hasDetonator == false)
+        if (world.isBlockIndirectlyGettingPowered(x, y, z)&& this.hasDetonator == false)
         {
-            this.onBlockDestroyedByPlayer(p_149695_1_, p_149695_2_, p_149695_3_, p_149695_4_, 1);
+            this.onBlockDestroyedByPlayer(world, x, y, z, 1);
             
-            p_149695_1_.setBlockToAir(p_149695_2_, p_149695_3_, p_149695_4_);
+            world.setBlockToAir(x, y, z);
         }
     }
 
     /**
      * Returns the quantity of items to drop on block destruction.
      */
-    public int quantityDropped(Random p_149745_1_)
+    public int quantityDropped(Random entity)
     {
         return 1;
     }
@@ -87,40 +87,40 @@ public class BaseExplosives extends Block {
     /**
      * Called upon the block being destroyed by an explosion
      */
-    public void onBlockDestroyedByExplosion(World p_149723_1_, int p_149723_2_, int p_149723_3_, int p_149723_4_, Explosion p_149723_5_)
+    public void onBlockDestroyedByExplosion(World world, int x, int y, int z, Explosion explosion)
     {
-        if (!p_149723_1_.isRemote)
+        if (!world.isRemote)
         {
-            BaseExplosivePrimed entitytntprimed = new BaseExplosivePrimed(p_149723_1_, (double)((float)p_149723_2_ + 0.5F), (double)((float)p_149723_3_ + 0.5F), (double)((float)p_149723_4_ + 0.5F), p_149723_5_.getExplosivePlacedBy());
-            entitytntprimed.fuse = p_149723_1_.rand.nextInt(this.fuse / 4) + this.fuse / 8;
+            BaseExplosivePrimed entitytntprimed = new BaseExplosivePrimed(world, (double)((float)x + 0.5F), (double)((float)y + 0.5F), (double)((float)z + 0.5F), explosion.getExplosivePlacedBy());
+            entitytntprimed.fuse = world.rand.nextInt(this.fuse / 4) + this.fuse / 8;
             entitytntprimed.force = this.force;
-            p_149723_1_.spawnEntityInWorld(entitytntprimed);
+            world.spawnEntityInWorld(entitytntprimed);
         }
     }
 
     /**
      * Called right before the block is destroyed by a player.  Args: world, x, y, z, metaData
      */
-    public void onBlockDestroyedByPlayer(World p_149664_1_, int p_149664_2_, int p_149664_3_, int p_149664_4_, int p_149664_5_)
+    public void onBlockDestroyedByPlayer(World world, int x, int y, int z, int metaData)
     {
-        this.func_150114_a(p_149664_1_, p_149664_2_, p_149664_3_, p_149664_4_, p_149664_5_, (EntityLivingBase)null);
+        this.createExplosivePrimed(world, x, y, z, metaData, (EntityLivingBase)null);
     }
-    public void func_150114_a(World p_150114_1_, int p_150114_2_, int p_150114_3_, int p_150114_4_, int p_150114_5_, EntityLivingBase p_150114_6_)
+    public void createExplosivePrimed(World world, int x, int y, int z, int rand, EntityLivingBase livingEntity)
     {
-        if (!p_150114_1_.isRemote)
+        if (!world.isRemote)
         {
-            if ((p_150114_5_ & 1) == 1)
+            if ((rand & 1) == 1)
             {
 
-            	BaseExplosivePrimed entitytntprimed = new BaseExplosivePrimed(p_150114_1_, (double)((float)p_150114_2_ + 0.5F), (double)((float)p_150114_3_ + 0.5F), (double)((float)p_150114_4_ + 0.5F), p_150114_6_);
+            	BaseExplosivePrimed entitytntprimed = new BaseExplosivePrimed(world, (double)((float)x + 0.5F), (double)((float)y + 0.5F), (double)((float)z + 0.5F), livingEntity);
                 entitytntprimed.fuse = this.fuse;
                 entitytntprimed.force = this.force;
                 entitytntprimed.hasEffect = this.hasEffect;
                 if (this.effectName != null){
                 	BaseExplosivePrimed.effectName = this.effectName;
                 }
-                p_150114_1_.spawnEntityInWorld(entitytntprimed);
-                p_150114_1_.playSoundAtEntity(entitytntprimed, "game.tnt.primed", 1.0F, 1.0F);
+                world.spawnEntityInWorld(entitytntprimed);
+                world.playSoundAtEntity(entitytntprimed, "game.tnt.primed", 1.0F, 1.0F);
             }
         }
     }
@@ -129,21 +129,21 @@ public class BaseExplosives extends Block {
      * Called upon block activation (right click on the block.)
      */
     @Override
-    public boolean onBlockActivated(World p_149727_1_, int p_149727_2_, int p_149727_3_, int p_149727_4_, EntityPlayer p_149727_5_, int p_149727_6_, float p_149727_7_, float p_149727_8_, float p_149727_9_)
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int metaData, float sideX, float sideY, float sideZ)
     {
     	if(this.hasDetonator == true){
 
-        if (p_149727_5_.getCurrentEquippedItem() != null && p_149727_5_.getCurrentEquippedItem().getItem() == MainFOD.detonator)
+        if (player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().getItem() == MainFOD.detonator)
         {
         		
-        		this.func_150114_a(p_149727_1_, p_149727_2_, p_149727_3_, p_149727_4_, 1, p_149727_5_);
-        		p_149727_1_.setBlockToAir(p_149727_2_, p_149727_3_, p_149727_4_);
+        		this.createExplosivePrimed(world, x, y, z, 1, player);
+        		world.setBlockToAir(x, y, z);
             	return true;
         }
         else
         {
         	
-        	return super.onBlockActivated(p_149727_1_, p_149727_2_, p_149727_3_, p_149727_4_, p_149727_5_, p_149727_6_, p_149727_7_, p_149727_8_, p_149727_9_);
+        	return super.onBlockActivated(world, x, y, z, player, metaData, sideX, sideY, sideZ);
         }
         }else {
         	return false;
@@ -153,16 +153,18 @@ public class BaseExplosives extends Block {
     /**
      * Triggered whenever an entity collides with this block (enters into the block). Args: world, x, y, z, entity
      */
-    public void onEntityCollidedWithBlock(World p_149670_1_, int p_149670_2_, int p_149670_3_, int p_149670_4_, Entity p_149670_5_)
+    public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
     {
-        if (p_149670_5_ instanceof EntityArrow && !p_149670_1_.isRemote)
+        if (entity instanceof EntityArrow && !world.isRemote)
         {
-            EntityArrow entityarrow = (EntityArrow)p_149670_5_;
+            EntityArrow entityarrow = (EntityArrow)entity;
 
             if (entityarrow.isBurning())
             {
-                this.func_150114_a(p_149670_1_, p_149670_2_, p_149670_3_, p_149670_4_, 1, entityarrow.shootingEntity instanceof EntityLivingBase ? (EntityLivingBase)entityarrow.shootingEntity : null);
-                p_149670_1_.setBlockToAir(p_149670_2_, p_149670_3_, p_149670_4_);
+                if(this.hasDetonator == false){
+                	this.createExplosivePrimed(world, x, y, z, 1, entityarrow.shootingEntity instanceof EntityLivingBase ? (EntityLivingBase)entityarrow.shootingEntity : null);
+                	world.setBlockToAir(x, y, z);
+                }
             }
         }
     }
@@ -170,7 +172,7 @@ public class BaseExplosives extends Block {
     /**
      * Return whether this block can drop from an explosion.
      */
-    public boolean canDropFromExplosion(Explosion p_149659_1_)
+    public boolean canDropFromExplosion(Explosion explosion)
     {
         return false;
     }
