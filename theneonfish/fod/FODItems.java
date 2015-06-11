@@ -8,7 +8,7 @@ import futuristicoffensiveanddefenseive.theneonfish.fod.items.basicItem;
 
 public class FODItems {
 	public static final ItemEnergized basicBattery = (ItemEnergized)new ItemEnergized(10000).setUnlocalizedName("Battery");
-	public static final Item detonator = new basicItem().setUnlocalizedName("Detonator");
+	public static final basicItem detonator = (basicItem) new basicItem().setUnlocalizedName("Detonator");
 			
 			
 	public static void register(){
