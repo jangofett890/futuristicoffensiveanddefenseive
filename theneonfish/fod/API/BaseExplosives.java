@@ -1,32 +1,26 @@
 package futuristicoffensiveanddefenseive.theneonfish.fod.API;
 
-import futuristicoffensiveanddefenseive.theneonfish.fod.FODItems;
-import futuristicoffensiveanddefenseive.theneonfish.fod.MainFOD;
-import ibxm.Player;
-
 import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.init.Items;
 import net.minecraft.potion.Potion;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.IChatComponent;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
-import cpw.mods.fml.common.ModClassLoader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import futuristicoffensiveanddefenseive.theneonfish.fod.FODItems;
 
 public class BaseExplosives extends Block {
 	public int fuse;
-	public static float force;
+	public static int force;
 	
 	 private String unlocalizedName;
 	
@@ -35,8 +29,8 @@ public class BaseExplosives extends Block {
 	public boolean hasDetonator;
 	
 	
-	public BaseExplosives(Material matt, int fuse, float force) {
-		super(matt);
+	public BaseExplosives(Material mat, int fuse, int force) {
+		super(mat);
 		this.fuse = fuse;
 		this.force = force;
 	}
@@ -54,10 +48,14 @@ public class BaseExplosives extends Block {
 	}
 	
 	
-    public BaseExplosives setBlockName(String name)
+    public BaseExplosives setName(String name)
     {
         this.unlocalizedName = name;
         return this;
+    }
+    public BaseExplosives setTab(CreativeTabs tab){
+    	this.setCreativeTab(tab);
+    	return this;
     }
 	
 	@SideOnly(Side.CLIENT)
@@ -66,18 +64,11 @@ public class BaseExplosives extends Block {
     private IIcon field_150115_b;
     private static final String __OBFID = "CL_00000324";
 
-    /**
-     * Gets the block's texture. Args: side, meta
-     */
     @SideOnly(Side.CLIENT)
     public IIcon getIcon(int p_149691_1_, int p_149691_2_)
     {
         return p_149691_1_ == 0 ? this.field_150115_b : (p_149691_1_ == 1 ? this.field_150116_a : this.blockIcon);
     }
-
-    /**
-     * Called whenever the block is added into the world. Args: world, x, y, z
-     */
     public void onBlockAdded(World world, int x, int y, int z)
     {
         super.onBlockAdded(world, x, y, z);
@@ -88,10 +79,6 @@ public class BaseExplosives extends Block {
         }
     }
 
-    /**
-     * Lets the block know when one of its neighbor changes. Doesn't know which neighbor changed (coordinates passed are
-     * their own) Args: x, y, z, neighbor Block
-     */
     public void onNeighborBlockChange(World world, int x, int y, int z, Block block)
     {
         if (world.isBlockIndirectlyGettingPowered(x, y, z)&& this.hasDetonator == false)
@@ -102,17 +89,11 @@ public class BaseExplosives extends Block {
         }
     }
 
-    /**
-     * Returns the quantity of items to drop on block destruction.
-     */
     public int quantityDropped(Random entity)
     {
         return 1;
     }
 
-    /**
-     * Called upon the block being destroyed by an explosion
-     */
     public void onBlockDestroyedByExplosion(World world, int x, int y, int z, Explosion explosion)
     {
         if (!world.isRemote)
@@ -124,9 +105,6 @@ public class BaseExplosives extends Block {
         }
     }
 
-    /**
-     * Called right before the block is destroyed by a player.  Args: world, x, y, z, metaData
-     */
     public void onBlockDestroyedByPlayer(World world, int x, int y, int z, int metaData)
     {
         this.createExplosivePrimed(world, x, y, z, metaData, (EntityLivingBase)null);
@@ -150,9 +128,6 @@ public class BaseExplosives extends Block {
         }
     }
 
-    /**
-     * Called upon block activation (right click on the block.)
-     */
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int metaData, float sideX, float sideY, float sideZ)
     {
@@ -173,9 +148,6 @@ public class BaseExplosives extends Block {
         }
     }
 
-    /**
-     * Triggered whenever an entity collides with this block (enters into the block). Args: world, x, y, z, entity
-     */
     public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
     {
         if (entity instanceof EntityArrow && !world.isRemote)
@@ -191,10 +163,6 @@ public class BaseExplosives extends Block {
             }
         }
     }
-
-    /**
-     * Return whether this block can drop from an explosion.
-     */
     public boolean canDropFromExplosion(Explosion explosion)
     {
         return false;

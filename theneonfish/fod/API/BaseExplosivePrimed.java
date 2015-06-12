@@ -18,7 +18,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class BaseExplosivePrimed extends Entity {	
 	private EntityLivingBase tntPlacedBy;
 	public int fuse;
-	public float force;
+	public int force;
 	public boolean hasEffect;
 	public boolean hasDetonator;
 	public static Potion effectName;
@@ -35,7 +35,7 @@ public class BaseExplosivePrimed extends Entity {
     {
         this(world);
         this.setPosition(x, y, z);
-        float f = (float)(Math.random() * Math.PI * 2.0D);
+        float f = (float) ((float)(3/4)*(Math.PI)*this.force);
         this.motionX = (double)(-((float)Math.sin((double)f)) * 0.02F);
         this.motionY = 0.20000000298023224D;
         this.motionZ = (double)(-((float)Math.cos((double)f)) * 0.02F);
