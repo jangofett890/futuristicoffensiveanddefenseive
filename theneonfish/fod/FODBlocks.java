@@ -6,12 +6,12 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.potion.Potion;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.GameRegistry.ObjectHolder;
-import futuristicoffensiveanddefenseive.theneonfish.fod.API.BaseExplosives;
 import futuristicoffensiveanddefenseive.theneonfish.fod.API.*;
 import futuristicoffensiveanddefenseive.theneonfish.fod.blocks.Turret;
 import futuristicoffensiveanddefenseive.theneonfish.fod.blocks.TurretBase;
 
 
+import futuristicoffensiveanddefenseive.theneonfish.fod.items.TurretBaseItem;
 import static futuristicoffensiveanddefenseive.theneonfish.fod.blocks.Turret.TurretBlock.TURRET_BLOCK_1;
 import static futuristicoffensiveanddefenseive.theneonfish.fod.blocks.Turret.TurretBlock.TURRET_BLOCK_2;
 
@@ -31,6 +31,6 @@ public class FODBlocks {
 	public static void register(){
 		GameRegistry.registerBlock(condensedExsplosives, "Condensed Explosives");
 		GameRegistry.registerBlock(((BaseExplosives) nuke).setTab(tab).setEffect(Potion.poison).hasDetonator(true), "Nuke");
-		GameRegistry.registerBlock(turretBase, "Turret Base");
+		GameRegistry.registerBlock(turretBase, TurretBaseItem.class, "Turret Base");
 	}
 }

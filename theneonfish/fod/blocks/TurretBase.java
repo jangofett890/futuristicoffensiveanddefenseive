@@ -6,10 +6,11 @@ import futuristicoffensiveanddefenseive.theneonfish.fod.FODBlocks;
 import futuristicoffensiveanddefenseive.theneonfish.fod.MainFOD;
 import futuristicoffensiveanddefenseive.theneonfish.fod.Tier;
 import futuristicoffensiveanddefenseive.theneonfish.fod.Tier.TurretBaseTier;
+import futuristicoffensiveanddefenseive.theneonfish.fod.TileEntities.TileEntityBasicBlockFOD;
 import futuristicoffensiveanddefenseive.theneonfish.fod.TileEntities.TileEntityTurretBase;
 import futuristicoffensiveanddefenseive.theneonfish.fod.common.ITurretBase;
+import futuristicoffensiveanddefenseive.theneonfish.fod.utils.ISustainedInventory;
 import mekanism.api.energy.IEnergizedItem;
-import mekanism.common.base.ISustainedInventory;
 import mekanism.common.tile.TileEntityBasicBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
@@ -43,12 +44,11 @@ public class TurretBase extends BlockContainer{
 	public static EntityPlayer owner;
 	public static int baseEnergy;
 	public static double perTick;
-	public Tier.TurretBaseTier tier = Tier.TurretBaseTier.ULTIMATE;
 	
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityliving, ItemStack itemstack)
 	{
-		TileEntityBasicBlock tileEntity = (TileEntityBasicBlock)world.getTileEntity(x, y, z);
+		TileEntityBasicBlockFOD tileEntity = (TileEntityBasicBlockFOD)world.getTileEntity(x, y, z);
 		int side = MathHelper.floor_double((double)(entityliving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 		int height = Math.round(entityliving.rotationPitch);
 		int change = 3;
@@ -106,11 +106,8 @@ public class TurretBase extends BlockContainer{
 
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta)
-	{	if(this.tier == Tier.TurretBaseTier.ULTIMATE){
-			perTick = 200;
-			baseEnergy = 128000000;
-		}
-		TileEntityTurretBase tile = new TileEntityTurretBase("Turret Base", perTick, baseEnergy, owner, tier);
+	{	
+		TileEntityTurretBase tile = new TileEntityTurretBase();
 		return tile;
 	}
 	
@@ -167,7 +164,7 @@ public class TurretBase extends BlockContainer{
 	@Override
 	public int getRenderType()
 	{
-		return 16;
+		return Blocks.piston.getRenderType();
 	}
 
 	@Override

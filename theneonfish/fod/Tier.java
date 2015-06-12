@@ -1,4 +1,6 @@
 package futuristicoffensiveanddefenseive.theneonfish.fod;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import io.netty.buffer.ByteBuf;
@@ -9,8 +11,9 @@ import futuristicoffensiveanddefenseive.theneonfish.fod.items.Upgrade;
 import futuristicoffensiveanddefenseive.theneonfish.fod.utils.LangUtils;
 import net.minecraft.block.material.Material;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.config.Property;
 
-public class Tier{
+public final class Tier{
 	public static List allowedTurretsFor1;
 	public static List allowedTurretsFor2;
 	public static List allowedTurretsFor3;
@@ -67,15 +70,31 @@ public class Tier{
 	}
 	
 	public static enum TurretBaseTier{
-		BASIC(2000000, allowedTurretsFor1, new Upgrade()),
-		ADVANCED(8000000, allowedTurretsFor2, new Upgrade()),
-		ELITE(32000000, allowedTurretsFor2, new Upgrade()),
-		ULTIMATE(128000000, allowedTurretsFor3, new Upgrade());
+		BASIC(2000000, allowedTurretsFor1),
+		ADVANCED(8000000, allowedTurretsFor2),
+		ELITE(32000000, allowedTurretsFor2),
+		ULTIMATE(128000000, allowedTurretsFor3), 
+		CREATIVE(Integer.MAX_VALUE, allowedTurretsFor3);
 		
 		public double maxEnergy;
 		private double baseMaxEnergy;
 		public List TURRETS;
-		public Upgrade UPGRADES;
+		public String TURRETSTRING1;
+		public Property TURRETSTRINGS;
+		
+		protected void loadConfig()
+		{
+			maxEnergy = MainFOD.configuration.get("tier", getBaseTier().getName() + "TurretBaseMaxEnergy", baseMaxEnergy).getDouble();
+		}
+		protected void readConfig(ByteBuf dataStream)
+		{
+			maxEnergy = dataStream.readDouble();
+		}
+		
+		protected void writeConfig(ByteBuf dataStream)
+		{
+			dataStream.writeDouble(maxEnergy);
+		}
 		
 		
 		public static TurretBaseTier getFromName(String tierName)
@@ -96,14 +115,36 @@ public class Tier{
 			return BaseTier.values()[ordinal()];
 		}
 
-		private TurretBaseTier(double max, List turrets, Upgrade upgrades)
+		private TurretBaseTier(double max, List turrets)
 		{
 				baseMaxEnergy = maxEnergy = max;
-				if(this.getBaseTier() == BaseTier.BASIC){
-					
-				}
 				turrets = TURRETS;
-				upgrades = UPGRADES;
+				
+
+		}
+	}
+
+	public static void loadConfig()
+	{
+		for(TurretBaseTier tier : TurretBaseTier.values())
+		{
+			tier.loadConfig();
+		}
+	}
+	
+	public static void readConfig(ByteBuf dataStream)
+	{		
+		for(TurretBaseTier tier : TurretBaseTier.values())
+		{
+			tier.readConfig(dataStream);
+		}
+	}
+	
+	public static void writeConfig(ByteBuf dataStream)
+	{		
+		for(TurretBaseTier tier : TurretBaseTier.values())
+		{
+			tier.writeConfig(dataStream);
 		}
 	}
 	
