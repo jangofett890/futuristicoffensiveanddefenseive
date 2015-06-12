@@ -15,11 +15,6 @@ public class MainFOD
 {
     public static final String MODID = "FuturisticOffensiveandDefensive";
     public static final String VERSION = "0.01";
-    
-    //public static PacketHandler packetHandler = new PacketHandler();
-    
-	//@SidedProxy(clientSide = "futuristicoffensiveanddefenseive.theneonfish.fod.client.ClientProxy", serverSide = "futuristicoffensiveanddefenseive.theneonfish.fod.common.CommonProxy")
-	//public static CommonProxy proxy;
 	
 	@Instance("FuturisticOffensiveandDefensive")
     public static MainFOD instance;
