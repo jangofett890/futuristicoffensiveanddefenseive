@@ -28,13 +28,13 @@ public class MainFOD
     };
     @EventHandler
     public void preInit(FMLInitializationEvent event){
-
     }
     
     
     @EventHandler
     public void init(FMLInitializationEvent event)
     {    	
+    	FODEntities.register();
     	FODBlocks.register();
     	FODItems.register();    
     }
