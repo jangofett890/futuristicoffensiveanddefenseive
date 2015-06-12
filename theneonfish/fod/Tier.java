@@ -1,13 +1,32 @@
 package futuristicoffensiveanddefenseive.theneonfish.fod;
+import java.util.List;
+
 import io.netty.buffer.ByteBuf;
 import mekanism.api.EnumColor;
 import futuristicoffensiveanddefenseive.theneonfish.fod.blocks.Turret;
+import futuristicoffensiveanddefenseive.theneonfish.fod.blocks.Turret.TurretType;
 import futuristicoffensiveanddefenseive.theneonfish.fod.items.Upgrade;
 import futuristicoffensiveanddefenseive.theneonfish.fod.utils.LangUtils;
 import net.minecraft.block.material.Material;
 import net.minecraft.util.ResourceLocation;
 
 public class Tier{
+	public static List allowedTurretsFor1;
+	public static List allowedTurretsFor2;
+	public static List allowedTurretsFor3;
+	
+	public Tier(){
+		allowedTurretsFor1.add(TurretType.TURRET_CROSSBOW);
+		allowedTurretsFor1.add(TurretType.TURRET_MACHINEGUN);
+		allowedTurretsFor1.add(TurretType.TURRET_ROCKETLAUNCHER);
+		allowedTurretsFor2.addAll(allowedTurretsFor1);
+		allowedTurretsFor2.add(TurretType.TURRET_PLASMA);
+		allowedTurretsFor2.add(TurretType.TURRET_LASER);
+		allowedTurretsFor3.addAll(allowedTurretsFor2);
+		allowedTurretsFor3.add(TurretType.TURRET_IRIDIUM);
+		allowedTurretsFor3.add(TurretType.TURRET_ANTIMATTER);	
+	}
+	
 	
 	public static enum BaseTier
 	{
@@ -48,15 +67,16 @@ public class Tier{
 	}
 	
 	public static enum TurretBaseTier{
-		BASIC(2000000, new Turret[]{}, new Upgrade()),
-		ADVANCED(8000000, new Turret(Material.iron), new Upgrade()),
-		ELITE(32000000, new Turret(Material.iron), new Upgrade()),
-		ULTIMATE(128000000, new Turret(Material.iron), new Upgrade());
+		BASIC(2000000, allowedTurretsFor1, new Upgrade()),
+		ADVANCED(8000000, allowedTurretsFor2, new Upgrade()),
+		ELITE(32000000, allowedTurretsFor2, new Upgrade()),
+		ULTIMATE(128000000, allowedTurretsFor3, new Upgrade());
 		
 		public double maxEnergy;
 		private double baseMaxEnergy;
-		public Turret[] TURRETS;
-		public Upgrade[] UPGRADES;
+		public List TURRETS;
+		public Upgrade UPGRADES;
+		
 		
 		public static TurretBaseTier getFromName(String tierName)
 		{
@@ -76,7 +96,7 @@ public class Tier{
 			return BaseTier.values()[ordinal()];
 		}
 
-		private TurretBaseTier(double max, Turret[] turrets, Upgrade[] upgrades)
+		private TurretBaseTier(double max, List turrets, Upgrade upgrades)
 		{
 				baseMaxEnergy = maxEnergy = max;
 				if(this.getBaseTier() == BaseTier.BASIC){

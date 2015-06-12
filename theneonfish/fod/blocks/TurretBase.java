@@ -5,18 +5,24 @@ import java.util.Random;
 import futuristicoffensiveanddefenseive.theneonfish.fod.FODBlocks;
 import futuristicoffensiveanddefenseive.theneonfish.fod.MainFOD;
 import futuristicoffensiveanddefenseive.theneonfish.fod.Tier;
+import futuristicoffensiveanddefenseive.theneonfish.fod.Tier.TurretBaseTier;
 import futuristicoffensiveanddefenseive.theneonfish.fod.TileEntities.TileEntityTurretBase;
+import futuristicoffensiveanddefenseive.theneonfish.fod.common.ITurretBase;
 import mekanism.api.energy.IEnergizedItem;
 import mekanism.common.base.ISustainedInventory;
 import mekanism.common.tile.TileEntityBasicBlock;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
+import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Facing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
@@ -30,7 +36,14 @@ public class TurretBase extends BlockContainer{
 		setCreativeTab(MainFOD.tabList);
 	}
 	
+	public static boolean hasTurret(int meta){
+		return (meta & 8) != 0;
+	}
+	
+	public static EntityPlayer owner;
 	public static int baseEnergy;
+	public static double perTick;
+	public Tier.TurretBaseTier tier = Tier.TurretBaseTier.ULTIMATE;
 	
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityliving, ItemStack itemstack)
@@ -56,6 +69,10 @@ public class TurretBase extends BlockContainer{
 				case 2: change = 3; break;
 				case 3: change = 4; break;
 			}
+		}
+		if(entityliving instanceof EntityPlayer){
+			EntityPlayer player = (EntityPlayer) entityliving;
+			this.owner = player;
 		}
 
 		tileEntity.setFacing((short)change);
@@ -89,11 +106,51 @@ public class TurretBase extends BlockContainer{
 
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta)
-	{
-		
-		TileEntityTurretBase tile = new TileEntityTurretBase("Turret Base", baseEnergy);
+	{	if(this.tier == Tier.TurretBaseTier.ULTIMATE){
+			perTick = 200;
+			baseEnergy = 128000000;
+		}
+		TileEntityTurretBase tile = new TileEntityTurretBase("Turret Base", perTick, baseEnergy, owner, tier);
 		return tile;
 	}
+	
+	
+	@Override
+	public void onBlockHarvested(World world, int x, int y, int z, int meta, EntityPlayer player)
+	{
+	        if (player.capabilities.isCreativeMode)
+	        {
+	            Block block = world.getBlock(x, y, z +1 );
+
+	            if (block == FODBlocks.TurretBlock || block == FODBlocks.TurretBlock2)
+	            {
+	                world.setBlockToAir(x, y, z + 1);
+	            }
+	        }
+
+	        super.onBlockHarvested(world, x, y, z, meta, player);
+	 }
+	@Override
+	public void breakBlock(World world, int x, int y, int z, Block block, int meta)
+	{
+	        super.breakBlock(world, x, y, z, block, meta);
+	        Block block1 = world.getBlock(x, y, z + 1);
+
+	        if (block == FODBlocks.TurretBlock || block == FODBlocks.TurretBlock2)
+	        {
+	            meta = world.getBlockMetadata(x, y, z + 1);
+
+	            if (this.hasTurret(meta))
+	            {
+	                block1.dropBlockAsItem(world, x, y, z + 1, meta, 0);
+	                world.setBlockToAir(x, y, z + 1);
+	            }
+	        }
+	}
+	
+	
+	
+	
 
 	@Override
 	public boolean renderAsNormalBlock()
@@ -110,7 +167,7 @@ public class TurretBase extends BlockContainer{
 	@Override
 	public int getRenderType()
 	{
-		return -1;
+		return 16;
 	}
 
 	@Override
