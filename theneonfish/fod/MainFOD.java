@@ -46,13 +46,15 @@ public class MainFOD
 		
     	FODBlocks.register();
     	FODItems.register(); 
-    }
-    
+
     
     @EventHandler
     public void init(FMLInitializationEvent event)
     {    	
-		proxy.loadConfiguration();
-		proxy.onConfigSync(false);
+	proxy.loadConfiguration();
+	proxy.onConfigSync(false);
+
+    	FODEntities.register();
+
     }
 }

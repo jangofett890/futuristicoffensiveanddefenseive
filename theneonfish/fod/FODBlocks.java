@@ -6,6 +6,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.potion.Potion;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.GameRegistry.ObjectHolder;
+import cpw.mods.fml.common.registry.LanguageRegistry;
 import futuristicoffensiveanddefenseive.theneonfish.fod.API.*;
 import futuristicoffensiveanddefenseive.theneonfish.fod.blocks.Turret;
 import futuristicoffensiveanddefenseive.theneonfish.fod.blocks.TurretBase;
@@ -19,10 +20,10 @@ import static futuristicoffensiveanddefenseive.theneonfish.fod.blocks.Turret.Tur
 @ObjectHolder("FuturisticOffensiveandDefensive")
 public class FODBlocks {
 	public static CreativeTabs tab = MainFOD.tabList;
-	public static final Block condensedExsplosives = new BaseExplosives(Material.tnt, 100, 30).setBlockName("CondensedExplosives").setCreativeTab(tab);
-    public static final Block nuke = new BaseExplosives(Material.tnt, 20, 500).setBlockName("Nuke").setCreativeTab(tab);
+	//public static final Block condensedExsplosives = new BaseExplosives(Material.tnt, 10, 30, false, "CondencedExplosive").setBlockName("CondensedExplosives").setCreativeTab(tab);
+    //public static final Block nuke = new BaseExplosives(Material.tnt, 20, 1000, true, "Nuke").setBlockName("Nuke").setCreativeTab(tab);
+	public static final Block Test = new BaseExplosives(Material.tnt, 4, 10, true, "Test").setBlockName("Test").setCreativeTab(tab);
 	public static final Block turretBase = new TurretBase().setBlockName("TurretBase");
-	
 	public static final Block TurretBlock = new Turret(TURRET_BLOCK_1).setBlockName("Null");
 	public static final Block TurretBlock2 = new Turret(TURRET_BLOCK_2).setBlockName("Null");
 	
@@ -32,5 +33,8 @@ public class FODBlocks {
 		GameRegistry.registerBlock(condensedExsplosives, "Condensed Explosives");
 		GameRegistry.registerBlock(((BaseExplosives) nuke).setTab(tab).setEffect(Potion.poison).hasDetonator(true), "Nuke");
 		GameRegistry.registerBlock(turretBase, TurretBaseItem.class, "Turret Base");
+		GameRegistry.registerBlock(Test, "Test");
+		GameRegistry.registerBlock(turretBase, "Turret Base");
+		LanguageRegistry.addName(Test, "Test");
 	}
 }

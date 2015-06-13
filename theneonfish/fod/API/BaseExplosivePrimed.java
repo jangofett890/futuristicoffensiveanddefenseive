@@ -22,6 +22,7 @@ public class BaseExplosivePrimed extends Entity {
 	public boolean hasEffect;
 	public boolean hasDetonator;
 	public static Potion effectName;
+	public World worldObjCustom;
 	
 	public BaseExplosivePrimed(World p_i1729_1_) {
 		super(p_i1729_1_);
@@ -35,7 +36,7 @@ public class BaseExplosivePrimed extends Entity {
     {
         this(world);
         this.setPosition(x, y, z);
-        float f = (float) ((float)(3/4)*(Math.PI)*this.force);
+        float f = (float)(Math.random() * Math.PI * 2.0D);
         this.motionX = (double)(-((float)Math.sin((double)f)) * 0.02F);
         this.motionY = 0.20000000298023224D;
         this.motionZ = (double)(-((float)Math.cos((double)f)) * 0.02F);
@@ -117,7 +118,7 @@ public class BaseExplosivePrimed extends Entity {
     	if(hasEffect == true){
     		giveEffect(this.effectName, this.posX, this.posY, this.posZ, 1000, force);
     	}
-        this.worldObj.createExplosion(this, this.posX, this.posY, this.posZ, force, true);
+        CustomExplosion.createExplosion(this, this.posX, this.posY, this.posZ, force, true);
     }
 
     /**
