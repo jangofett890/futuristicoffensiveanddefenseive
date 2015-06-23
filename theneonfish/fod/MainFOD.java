@@ -46,6 +46,7 @@ public class MainFOD
 		
     	FODBlocks.register();
     	FODItems.register(); 
+    }
 
     
     @EventHandler

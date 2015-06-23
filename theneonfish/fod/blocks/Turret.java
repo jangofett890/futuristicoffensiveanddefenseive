@@ -8,6 +8,9 @@ import java.util.List;
 import futuristicoffensiveanddefenseive.theneonfish.fod.FODBlocks;
 import futuristicoffensiveanddefenseive.theneonfish.fod.FODRecipe;
 import futuristicoffensiveanddefenseive.theneonfish.fod.MainFOD;
+import futuristicoffensiveanddefenseive.theneonfish.fod.Tier.BaseTier;
+import futuristicoffensiveanddefenseive.theneonfish.fod.Tier.TurretBaseTier;
+import futuristicoffensiveanddefenseive.theneonfish.fod.TileEntities.TileEntityTurretBase;
 import futuristicoffensiveanddefenseive.theneonfish.fod.TileEntities.TileEntityTurretGun;
 import futuristicoffensiveanddefenseive.theneonfish.fod.client.render.ICustomBlockIcon;
 import futuristicoffensiveanddefenseive.theneonfish.fod.utils.LangUtils;
@@ -32,7 +35,7 @@ public class Turret extends BlockContainer implements ISpecialBounds, IBlockCTM,
 
 	
 	public TurretBlock blockType;
-	
+	public EntityPlayer owner;
 
 
 	
@@ -117,6 +120,24 @@ public class Turret extends BlockContainer implements ISpecialBounds, IBlockCTM,
 		public Collection<FODRecipe> getRecipes()
 		{
 			return turretRecipes;
+		}
+		
+		public static TurretType getFromName(String typeName)
+		{
+			for(TurretType type : values())
+			{
+				if(typeName.contains(type.getBaseType().getName()))
+				{
+					return type;
+				}
+			}
+			
+			return TURRET_CROSSBOW;
+		}
+		
+		public TurretType getBaseType()
+		{
+			return TurretType.values()[ordinal()];
 		}
 		
 		public static List<TurretType> getValidTurrets()
@@ -216,6 +237,10 @@ public class Turret extends BlockContainer implements ISpecialBounds, IBlockCTM,
 		{
 			return get(Block.getBlockFromItem(stack.getItem()), stack.getItemDamage());
 		}
+
+		public String getName() {
+			return name;
+		}
 	}
 	
 	@Override
@@ -234,6 +259,10 @@ public class Turret extends BlockContainer implements ISpecialBounds, IBlockCTM,
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityliving, ItemStack itemstack)
 	{
+		if(world.getBlock(x, y, z - 1) == FODBlocks.turretBase){
+			if(entityliving instanceof EntityPlayer){
+				this.owner = (EntityPlayer) entityliving;
+			}
 		TileEntityBasicBlock tileEntity = (TileEntityBasicBlock)world.getTileEntity(x, y, z);
 		int side = MathHelper.floor_double((double)(entityliving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 		int height = Math.round(entityliving.rotationPitch);
@@ -262,6 +291,10 @@ public class Turret extends BlockContainer implements ISpecialBounds, IBlockCTM,
 		
 		tileEntity.setFacing((short)change);
 		tileEntity.redstone = world.isBlockIndirectlyGettingPowered(x, y, z);
+		}else{
+			dropBlockAsItem(world, x, y, z, 0, 0);
+			world.setBlockToAir(x, y, z);
+		}
 	}
 
 
@@ -292,9 +325,10 @@ public class Turret extends BlockContainer implements ISpecialBounds, IBlockCTM,
 
 
 	@Override
-	public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) {
-		// TODO Auto-generated method stub
-		return null;
+	public TileEntity createNewTileEntity(World world, int meta)
+	{	
+		TileEntityTurretGun tile = new TileEntityTurretGun(owner);
+		return tile;
 	}
 
 
