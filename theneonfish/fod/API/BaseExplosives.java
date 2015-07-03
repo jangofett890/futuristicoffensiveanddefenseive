@@ -84,13 +84,11 @@ public class BaseExplosives extends Block {
             world.setBlockToAir(x, y, z);
         }
     }
-
     public void onNeighborBlockChange(World world, int x, int y, int z, Block block)
     {
         if (world.isBlockIndirectlyGettingPowered(x, y, z)&& this.hasDetonator == false)
         {
             this.onBlockDestroyedByPlayer(world, x, y, z, 1);
-            
             world.setBlockToAir(x, y, z);
         }
     }
@@ -110,7 +108,6 @@ public class BaseExplosives extends Block {
             world.spawnEntityInWorld(entitytntprimed);
         }
     }
-    
     @Override
     public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest){
     	if(this.live == true){
@@ -134,16 +131,17 @@ public class BaseExplosives extends Block {
     {
         this.createExplosivePrimed(world, x, y, z, metaData, (EntityLivingBase)null);
     }
-    public static void createExplosivePrimed(World world, int x, int y, int z, int rand, EntityLivingBase livingEntity)
+    public static void createExplosivePrimed(World world, int x, int y, int z, int rand, EntityLivingBase entityLivingBase)
     {
         if (!world.isRemote)
         {
             if ((rand & 1) == 1)
             {
-            	BaseExplosivePrimed entitytntprimed = new BaseExplosivePrimed(world, (double)((float)x + 0.5F), (double)((float)y + 0.5F), (double)((float)z + 0.5F), livingEntity);
+            	BaseExplosivePrimed entitytntprimed = new BaseExplosivePrimed(world, (double)((float)x + 0.5F), (double)((float)y + 0.5F), (double)((float)z + 0.5F), entityLivingBase);
                 entitytntprimed.fuse = BaseExplosives.fuse;
                 entitytntprimed.force = BaseExplosives.force;
                 entitytntprimed.hasEffect = BaseExplosives.hasEffect;
+                entitytntprimed.setPosition(x, y, z);
                 if (BaseExplosives.effectName != null){
                 	BaseExplosivePrimed.effectName = BaseExplosives.effectName;
                 }

@@ -1,6 +1,5 @@
 package futuristicoffensiveanddefenseive.theneonfish.fod.API;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -10,12 +9,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BaseExplosivePrimed extends Entity {	
+public class BaseExplosivePrimed extends Entity {
+	public World world;
 	private EntityLivingBase tntPlacedBy;
 	public int fuse;
 	public int force;
@@ -23,19 +24,24 @@ public class BaseExplosivePrimed extends Entity {
 	public boolean hasDetonator;
 	public static Potion effectName;
 	public World worldObjCustom;
+    public double posX;
+    public double posY;
+    public double posZ;
 	
-	public BaseExplosivePrimed(World p_i1729_1_) {
-		super(p_i1729_1_);
+	public BaseExplosivePrimed(World world) {
+		super(world);
         this.preventEntitySpawning = true;
         this.setSize(0.98F, 0.98F);
         this.yOffset = this.height / 2.0F;
 	}
-    private static final String __OBFID = "CL_00001681";
-
-    public BaseExplosivePrimed(World world, double x, double y, double z, EntityLivingBase entity)
+    public static final String __OBFID = "CL_00001681";
+    public BaseExplosivePrimed(World world, double x, double y, double z, EntityLivingBase entityLivingBase)
     {
         this(world);
         this.setPosition(x, y, z);
+        this.posX = x;
+        this.posY = y;
+        this.posZ = z;
         float f = (float)(Math.random() * Math.PI * 2.0D);
         this.motionX = (double)(-((float)Math.sin((double)f)) * 0.02F);
         this.motionY = 0.20000000298023224D;
@@ -43,30 +49,17 @@ public class BaseExplosivePrimed extends Entity {
         this.prevPosX = x;
         this.prevPosY = y;
         this.prevPosZ = z;
-        this.tntPlacedBy = entity;
+        this.tntPlacedBy = entityLivingBase;
     }
     protected void entityInit() {}
-
-    /**
-     * returns if this entity triggers Block.onEntityWalking on the blocks they walk on. used for spiders and wolves to
-     * prevent them from trampling crops
-     */
     protected boolean canTriggerWalking()
     {
         return false;
     }
-
-    /**
-     * Returns true if other Entities should be prevented from moving through this Entity.
-     */
     public boolean canBeCollidedWith()
     {
         return !this.isDead;
     }
-
-    /**
-     * Called to update the entity's position/logic.
-     */
     @Override
     public void onUpdate()
     {
@@ -92,16 +85,15 @@ public class BaseExplosivePrimed extends Entity {
 
             if (!this.worldObj.isRemote)
             {
-                
-            	this.explode();
+            	this.explode(this.posX, this.posY, this.posZ);
             }
         }
         else
         {
-            this.worldObj.spawnParticle("smoke", this.posX, this.posY + 0.5D, this.posZ, 0.0D, 0.0D, 0.0D);
+            //world.spawnParticle("smoke", this.posX, this.posY + 0.5D, this.posZ, 0.0D, 0.0D, 0.0D);
         }
     }
-    private void giveEffect(Potion name, double x, double y, double z, int duration, float radius){
+    public void giveEffect(Potion name, double x, double y, double z, int duration, float radius){
     	List playerlist = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(x - radius, y - radius, z - radius, x + radius, y + radius,z + radius));	
     	Iterator playerIterator = playerlist.iterator();
     	EntityPlayer entityplayer;
@@ -113,26 +105,18 @@ public class BaseExplosivePrimed extends Entity {
         }
     	
     }
-    private void explode()
+    public void explode(double x, double y, double z)
     {
     	if(hasEffect == true){
-    		giveEffect(this.effectName, this.posX, this.posY, this.posZ, 1000, force);
+    		giveEffect(this.effectName, x, y, z, 1000, force);
     	}
-        CustomExplosion.createExplosion(this, this.posX, this.posY, this.posZ, force, true);
+        CustomExplosion.createExplosion(this, x, y, z, force, true);
     }
-
-    /**
-     * (abstract) Protected helper method to write subclass entity data to NBT.
-     */
     @Override
     protected void writeEntityToNBT(NBTTagCompound nbtTag)
     {
         nbtTag.setByte("Fuse", (byte)this.fuse);
     }
-
-    /**
-     * (abstract) Protected helper method to read subclass entity data from NBT.
-     */
     @Override
     protected void readEntityFromNBT(NBTTagCompound nbtTag)
     {
@@ -144,10 +128,6 @@ public class BaseExplosivePrimed extends Entity {
     {
         return 0.0F;
     }
-
-    /**
-     * returns null or the entityliving it was placed or ignited by
-     */
     public EntityLivingBase getTntPlacedBy()
     {
         return this.tntPlacedBy;
