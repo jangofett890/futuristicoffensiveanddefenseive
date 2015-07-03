@@ -1,26 +1,35 @@
 package futuristicoffensiveanddefenseive.theneonfish.fod.TileEntities;
 
+import io.netty.buffer.ByteBuf;
+
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 
+import futuristicoffensiveanddefenseive.theneonfish.fod.Tier.TurretBaseTier;
+import futuristicoffensiveanddefenseive.theneonfish.fod.blocks.Turret.TurretType;
 import scala.actors.threadpool.Arrays;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.util.ForgeDirection;
+import mekanism.common.base.IRedstoneControl.RedstoneControl;
 import mekanism.common.tile.TileEntityElectricBlock;
+import mekanism.common.util.MekanismUtils;
 
-public class TileEntityTurretGun extends TileEntityElectricBlock{
+public abstract class TileEntityTurretGun extends TileEntityElectricBlock{
+	
+	public TurretType type = TurretType.TURRET_CROSSBOW;
 
-	public TileEntityTurretGun(String name, double baseMaxEnergy) {
-		super(name, baseMaxEnergy);
-		name = turretName;
-		baseMaxEnergy = maxEnergy;
+	public TileEntityTurretGun(EntityPlayer owner) {
+		super("Turret", 0);
+		
+		safePlayers.add(owner);
 	}
 	
 	
 	public static String turretName;
 	public static int maxEnergy;
-	public static EntityPlayer owner;
 	public static boolean isActive;
 	
 	public static ArrayList safePlayers;
@@ -31,63 +40,7 @@ public class TileEntityTurretGun extends TileEntityElectricBlock{
 	
 	@Override
 	public void onUpdate(){
-		safePlayers.add(owner);
 		
-	}
-
-	@Override
-	public int getSizeInventory() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-
-	@Override
-	public ItemStack getStackInSlot(int p_70301_1_) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public ItemStack decrStackSize(int p_70298_1_, int p_70298_2_) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public ItemStack getStackInSlotOnClosing(int p_70304_1_) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public void setInventorySlotContents(int p_70299_1_, ItemStack p_70299_2_) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	public String getInventoryName() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
-	public boolean hasCustomInventoryName() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-
-	@Override
-	public int getInventoryStackLimit() {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 
 
@@ -97,50 +50,56 @@ public class TileEntityTurretGun extends TileEntityElectricBlock{
 		return false;
 	}
 
-
 	@Override
-	public void openInventory() {
-		// TODO Auto-generated method stub
-		
+	public EnumSet<ForgeDirection> getConsumingSides()
+	{
+		EnumSet set = EnumSet.allOf(ForgeDirection.class);
+		set.removeAll(getOutputtingSides());
+		set.remove(ForgeDirection.UNKNOWN);
+
+		return set;
 	}
 
-
 	@Override
-	public void closeInventory() {
-		// TODO Auto-generated method stub
-		
+	public EnumSet<ForgeDirection> getOutputtingSides()
+	{
+		return EnumSet.of(ForgeDirection.getOrientation(facing));
 	}
 
-
 	@Override
-	public boolean isItemValidForSlot(int p_94041_1_, ItemStack p_94041_2_) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean canSetFacing(int side)
+	{
+		return true;
 	}
 
-
 	@Override
-	public int[] getAccessibleSlotsFromSide(int p_94128_1_) {
-		// TODO Auto-generated method stub
-		return null;
+	public double getMaxEnergy()
+	{
+		return 100000;
+	}
+	
+	
+	@Override
+	public void handlePacketData(ByteBuf dataStream)
+	{
+		type = TurretType.values()[dataStream.readInt()];
+
+		super.handlePacketData(dataStream);
+
+		MekanismUtils.updateBlock(worldObj, xCoord, yCoord, zCoord);
 	}
 
-
 	@Override
-	public boolean canInsertItem(int p_102007_1_, ItemStack p_102007_2_,
-			int p_102007_3_) {
-		// TODO Auto-generated method stub
-		return false;
+	public ArrayList getNetworkedData(ArrayList data)
+	{
+		data.add(type.ordinal());
+
+		super.getNetworkedData(data);
+
+
+		return data;
 	}
-
-
-	@Override
-	public boolean canExtractItem(int p_102008_1_, ItemStack p_102008_2_,
-			int p_102008_3_) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
+	
 	@Override
 	public void readFromNBT(NBTTagCompound nbtTags)
 	{

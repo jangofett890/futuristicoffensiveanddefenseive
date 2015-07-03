@@ -47,7 +47,6 @@ public class MainFOD
     	FODBlocks.register();
     	FODItems.register(); 
     }
-    
     @EventHandler
     public void init(FMLInitializationEvent event)
     {    	

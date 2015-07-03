@@ -13,6 +13,7 @@ import futuristicoffensiveanddefenseive.theneonfish.fod.blocks.TurretBase;
 
 
 import futuristicoffensiveanddefenseive.theneonfish.fod.items.TurretBaseItem;
+import futuristicoffensiveanddefenseive.theneonfish.fod.items.TurretItem;
 import static futuristicoffensiveanddefenseive.theneonfish.fod.blocks.Turret.TurretBlock.TURRET_BLOCK_1;
 import static futuristicoffensiveanddefenseive.theneonfish.fod.blocks.Turret.TurretBlock.TURRET_BLOCK_2;
 
@@ -30,9 +31,10 @@ public class FODBlocks {
     
     
 	public static void register(){
-		GameRegistry.registerBlock(condensedExsplosives, "Condensed Explosives");
-		GameRegistry.registerBlock(((BaseExplosives) nuke).setTab(tab).setEffect(Potion.poison).hasDetonator(true), "Nuke");
+		//GameRegistry.registerBlock(condensedExsplosives, "Condensed Explosives");
+		//GameRegistry.registerBlock(((BaseExplosives) nuke).setTab(tab).setEffect(Potion.poison).hasDetonator(true), "Nuke");
 		GameRegistry.registerBlock(turretBase, TurretBaseItem.class, "Turret Base");
+		GameRegistry.registerBlock(TurretBlock, TurretItem.class, "Turret");
 		GameRegistry.registerBlock(Test, "Test");
 		LanguageRegistry.addName(Test, "Test");
 	}
