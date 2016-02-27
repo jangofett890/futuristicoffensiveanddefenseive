@@ -11,9 +11,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.Constants.NBT;
 import futuristicoffensiveanddefenseive.theneonfish.fod.utils.LangUtils;
-import mekanism.api.EnumColor;
-import mekanism.api.MekanismConfig.general;
-import mekanism.common.MekanismItems;
+import futuristicoffensiveanddefenseive.theneonfish.fod.API.EnumColor;
 import futuristicoffensiveanddefenseive.theneonfish.fod.common.IUpgradeTile;
 
 public enum Upgrade{
@@ -56,7 +54,7 @@ public enum Upgrade{
 	{
 		return getMax() > 1;
 	}
-	
+	/**
 	public ItemStack getStack()
 	{
 		switch(this)
@@ -71,7 +69,7 @@ public enum Upgrade{
 		}
 		
 		return null;
-	}
+	}**/
 	
 	/**public List<String> getInfo(TileEntity tile)
 	{

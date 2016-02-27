@@ -6,17 +6,9 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.config.Configuration;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import futuristicoffensiveanddefenseive.theneonfish.fod.common.CommonProxy;
 
-@Mod(modid = MainFOD.MODID, version = MainFOD.VERSION, name = "Futuristic Offensive and Deffensive", dependencies = "required-after:Mekanism" )
+@net.minecraftforge.fml.common.Mod(modid = MainFOD.MODID, version = MainFOD.VERSION, name = "Futuristic Offensive and Deffensive", dependencies = "required-after:Mekanism" )
 public class MainFOD
 {
     public static final String MODID = "FuturisticOffensiveandDefensive";
@@ -24,21 +16,21 @@ public class MainFOD
     
     public static Configuration configuration;
 	
-	@Instance("FuturisticOffensiveandDefensive")
+	@net.minecraftforge.fml.common.Mod.Instance("FuturisticOffensiveandDefensive")
     public static MainFOD instance;
     
-	@SidedProxy(clientSide="futuristicoffensiveanddefenseive.theneonfish.fod.common.ClientProxy", serverSide="futuristicoffensiveanddefenseive.theneonfish.fod.common.CommonProxy")
+	@net.minecraftforge.fml.common.SidedProxy(clientSide="futuristicoffensiveanddefenseive.theneonfish.fod.common.ClientProxy", serverSide="futuristicoffensiveanddefenseive.theneonfish.fod.common.CommonProxy")
 	public static CommonProxy proxy;
 	
     public static CreativeTabs tabList = new CreativeTabs("FuturisticOffensiveandDefensive"){
     	@Override
-    	@SideOnly(Side.CLIENT)
+    	@net.minecraftforge.fml.relauncher.SideOnly(net.minecraftforge.fml.relauncher.Side.CLIENT)
     	public Item getTabIconItem(){
     		return Items.ender_eye;
     	}
     };
-    @EventHandler
-    public void preInit(FMLPreInitializationEvent  event){
+    @net.minecraftforge.fml.common.Mod.EventHandler
+    public void preInit(net.minecraftforge.fml.common.event.FMLPreInitializationEvent  event){
     	File config = event.getSuggestedConfigurationFile();
 		
 		//Set the mod's configuration
@@ -47,8 +39,8 @@ public class MainFOD
     	FODBlocks.register();
     	FODItems.register(); 
     }
-    @EventHandler
-    public void init(FMLInitializationEvent event)
+    @net.minecraftforge.fml.common.Mod.EventHandler
+    public void init(net.minecraftforge.fml.common.event.FMLInitializationEvent event)
     {    	
 	proxy.loadConfiguration();
 	proxy.onConfigSync(false);
